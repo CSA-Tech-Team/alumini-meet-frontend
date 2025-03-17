@@ -16,7 +16,7 @@ const Health = () => {
     });
 
     const mutation = useApi<Todo>(HttpMethod.POST, false, "login", {
-        url: ApiEndpoints.LOGIN,
+        url: ApiEndpoints.POSTS,
         body: { title: "foo", body: "bar", userId: 1 },
     });
 
