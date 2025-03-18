@@ -43,3 +43,25 @@ export interface SignupResponse {
         course: string;
     };
 }
+
+
+// Course Enum
+export enum Course {
+    SOFTWARE_SYSTEMS = "SOFTWARESYSTEMS",
+    CYBER_SECURITY = "CYBERSECURITY",
+    DATA_SCIENCE = "DATASCIENCE",
+    THEORETICAL_COMPUTER_SCIENCE = "THEORETICALCOMPUTER_SCIENCE",
+    APPLIED_MATHEMATICS = "APPLIEDMATHEMATICS",
+}
+
+
+export interface VerifyOtpRequest {
+    email: string;
+    otp: string;
+}
+
+
+export interface VerifyOtpResponse {
+    message?: string;
+    access_token?: string;
+}

@@ -1,19 +1,30 @@
 import { useState } from "react";
 import { useApi } from "@/apis/useApi";
 import { HttpMethod, ApiEndpoints } from "@/apis/apis.enum";
-import { SignupRequest, SignupResponse } from "@/apis/apis.interface";
+import { Course, SignupRequest, SignupResponse } from "@/apis/apis.interface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { UseMutationResult } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { localStorageService } from "@/services/localStorage.service";
+
+const courseOptions: { label: string; value: Course }[] = [
+    { label: "Software Systems", value: Course.SOFTWARE_SYSTEMS },
+    { label: "Cyber Security", value: Course.CYBER_SECURITY },
+    { label: "Data Science", value: Course.DATA_SCIENCE },
+    { label: "Theoretical Computer Science", value: Course.THEORETICAL_COMPUTER_SCIENCE },
+    { label: "Applied Mathematics", value: Course.APPLIED_MATHEMATICS },
+];
 
 const Signup = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState<SignupRequest>({
         email: "",
         password: "",
         name: "",
         addr: "",
-        course: "",
+        course: "" as Course,
         designation: "",
         gender: "",
         gradyear: 2027,
@@ -28,10 +39,9 @@ const Signup = () => {
         { url: ApiEndpoints.SIGNUP, body: formData }
     ) as UseMutationResult<SignupResponse, Error, void, unknown>;
 
-    
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-    
+
         setFormData((prev) => ({
             ...prev,
             [name]: name === "gradyear" ? Number(value) : value,
@@ -43,6 +53,10 @@ const Signup = () => {
         mutation.mutate(undefined, {
             onSuccess: (data) => {
                 toast.success(data.message);
+                
+                localStorageService.setItem("email", formData.email);
+                
+                navigate("/verify-otp");
             },
             onError: (error: any) => {
                 if (error.response) {
@@ -70,7 +84,6 @@ const Signup = () => {
             },
         });
     };
-    
 
     return (
         <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
@@ -80,7 +93,23 @@ const Signup = () => {
                 <Input placeholder="Password" name="password" type="password" onChange={handleChange} />
                 <Input placeholder="Name" name="name" onChange={handleChange} />
                 <Input placeholder="Address" name="addr" onChange={handleChange} />
-                <Input placeholder="Course" name="course" onChange={handleChange} />
+
+                <select
+                    name="course"
+                    value={formData.course}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border rounded-md text-gray-500"
+                >
+                    <option value="" disabled>
+                        Select your course
+                    </option>
+                    {courseOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+
                 <Input placeholder="Designation" name="designation" onChange={handleChange} />
                 <Input placeholder="Gender" name="gender" onChange={handleChange} />
                 <Input placeholder="Graduation Year" name="gradyear" type="number" onChange={handleChange} />

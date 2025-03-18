@@ -4,7 +4,7 @@ import { HttpMethod } from "./apis.enum";
 import { ApiConfig } from "./apis.interface";
 import { localStorageService } from "../services/localStorage.service";
 
-const fetchApi = async ({ method, url, auth, body, params }: ApiConfig) => {
+const fetchApi = async <TRequest>({ method, url, auth, body, params }: ApiConfig & { body?: TRequest }) => {
     const config: AxiosRequestConfig = {
         method,
         url,
@@ -17,21 +17,20 @@ const fetchApi = async ({ method, url, auth, body, params }: ApiConfig) => {
     return response.data;
 };
 
-// Ensure correct return type
-export const useApi = <T = unknown>(
+export const useApi = <TResponse, TRequest = void>(
     method: HttpMethod,
     auth: boolean,
     key: string,
     config: Omit<ApiConfig, "method" | "auth">
-): UseQueryResult<T, Error> | UseMutationResult<T, Error, void, unknown> => {
+): UseQueryResult<TResponse, Error> | UseMutationResult<TResponse, Error, TRequest, unknown> => {
     if (method === HttpMethod.GET) {
-        return useQuery<T, Error>({
+        return useQuery<TResponse, Error>({
             queryKey: [key, config],
-            queryFn: () => fetchApi({ method, auth, ...config }),
-        }) as UseQueryResult<T, Error>;
+            queryFn: () => fetchApi<TRequest>({ method, auth, ...config }),
+        }) as UseQueryResult<TResponse, Error>;
     } else {
-        return useMutation<T, Error, void>({
-            mutationFn: () => fetchApi({ method, auth, ...config }),
-        }) as UseMutationResult<T, Error, void, unknown>;
+        return useMutation<TResponse, Error, TRequest>({
+            mutationFn: (data: TRequest) => fetchApi<TRequest>({ method, auth, body: data, ...config }),
+        }) as UseMutationResult<TResponse, Error, TRequest, unknown>;
     }
 };
