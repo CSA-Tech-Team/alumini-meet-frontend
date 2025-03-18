@@ -2,13 +2,9 @@ import { ApiEndpoints, HttpMethod } from "@/apis/apis.enum";
 import { useApi } from "@/apis/useApi";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Todo } from "@/constants/dtos/Todo";
 
-interface Todo {
-    userId: number;
-    id: number;
-    title: string;
-    completed: boolean;
-}
+
 
 const Health = () => {
     const query = useApi<Todo[]>(HttpMethod.GET, false, "todos", {

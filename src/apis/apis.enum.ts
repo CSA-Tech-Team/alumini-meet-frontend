@@ -13,6 +13,7 @@ export enum HttpMethod {
 }
 
 export const ApiEndpoints = {
-    TODOS: `${BASE_URL}/todos`,
-    POSTS: `${BASE_URL}/posts`,
+    TODOS: `https://jsonplaceholder.typicode.com/todos`,
+    POSTS: `https://jsonplaceholder.typicode.com/posts`,
+    SIGNUP: `${BASE_URL}/auth/signup`
 };

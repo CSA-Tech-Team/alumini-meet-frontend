@@ -2,8 +2,7 @@ import { useQuery, useMutation, UseQueryResult, UseMutationResult } from "@tanst
 import axios, { AxiosRequestConfig } from "axios";
 import { HttpMethod } from "./apis.enum";
 import { ApiConfig } from "./apis.interface";
-import { localStorageService } from "./localStorage.service";
-
+import { localStorageService } from "../services/localStorage.service";
 
 const fetchApi = async ({ method, url, auth, body, params }: ApiConfig) => {
     const config: AxiosRequestConfig = {
@@ -18,7 +17,7 @@ const fetchApi = async ({ method, url, auth, body, params }: ApiConfig) => {
     return response.data;
 };
 
-
+// Ensure correct return type
 export const useApi = <T = unknown>(
     method: HttpMethod,
     auth: boolean,
@@ -29,10 +28,10 @@ export const useApi = <T = unknown>(
         return useQuery<T, Error>({
             queryKey: [key, config],
             queryFn: () => fetchApi({ method, auth, ...config }),
-        });
+        }) as UseQueryResult<T, Error>;
     } else {
         return useMutation<T, Error, void>({
             mutationFn: () => fetchApi({ method, auth, ...config }),
-        });
+        }) as UseMutationResult<T, Error, void, unknown>;
     }
 };
