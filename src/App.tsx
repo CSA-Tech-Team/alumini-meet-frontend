@@ -3,7 +3,10 @@ import Health from "@/pages/Health";
 import Signup from "./pages/Signup";
 import { Toaster } from "sonner";
 import VerifyOtp from "./pages/VerifyOtp";
-import SignIn from "./pages/Signin";
+import SignIn from "./pages/SignIn";
+import Dashboard from "./pages/Dashboard";
+import ProfileForm from "./pages/ProfileForm";
+import EventDetails from "./pages/EventDetails";
 
 function App() {
   return (
@@ -13,8 +16,11 @@ function App() {
         <Route path="/health" element={<Health />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
-        <Route path="signin" element={<SignIn />} />
-      </Routes>
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile-update" element={<ProfileForm />} />
+        <Route path="/events/:eventId" element={<EventDetails />} />
+        </Routes>
     </>
   );
 }

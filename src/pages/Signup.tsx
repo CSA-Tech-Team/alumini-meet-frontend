@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useApi } from "@/apis/useApi";
 import { HttpMethod, ApiEndpoints } from "@/apis/apis.enum";
-import { Course, SignupRequest, SignupResponse } from "@/apis/apis.interface";
+import { SignupRequest, SignupResponse } from "@/apis/apis.interface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -9,27 +9,13 @@ import { UseMutationResult } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { localStorageService } from "@/services/localStorage.service";
 
-const courseOptions: { label: string; value: Course }[] = [
-    { label: "Software Systems", value: Course.SOFTWARE_SYSTEMS },
-    { label: "Cyber Security", value: Course.CYBER_SECURITY },
-    { label: "Data Science", value: Course.DATA_SCIENCE },
-    { label: "Theoretical Computer Science", value: Course.THEORETICAL_COMPUTER_SCIENCE },
-    { label: "Applied Mathematics", value: Course.APPLIED_MATHEMATICS },
-];
 
 const Signup = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState<SignupRequest>({
         email: "",
         password: "",
-        name: "",
-        addr: "",
-        course: "" as Course,
-        designation: "",
-        gender: "",
-        gradyear: 2027,
-        rollno: "",
-        phonenumber: "",
+        name: ""
     });
 
     const mutation = useApi<SignupResponse>(
@@ -92,30 +78,6 @@ const Signup = () => {
                 <Input placeholder="Email" name="email" type="email" onChange={handleChange} />
                 <Input placeholder="Password" name="password" type="password" onChange={handleChange} />
                 <Input placeholder="Name" name="name" onChange={handleChange} />
-                <Input placeholder="Address" name="addr" onChange={handleChange} />
-
-                <select
-                    name="course"
-                    value={formData.course}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border rounded-md text-gray-500"
-                >
-                    <option value="" disabled>
-                        Select your course
-                    </option>
-                    {courseOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
-
-                <Input placeholder="Designation" name="designation" onChange={handleChange} />
-                <Input placeholder="Gender" name="gender" onChange={handleChange} />
-                <Input placeholder="Graduation Year" name="gradyear" type="number" onChange={handleChange} />
-                <Input placeholder="Roll Number" name="rollno" onChange={handleChange} />
-                <Input placeholder="Phone Number" name="phonenumber" type="tel" onChange={handleChange} />
-
                 <Button type="submit" disabled={mutation.isPending}>
                     {mutation.isPending ? "Signing Up..." : "Sign Up"}
                 </Button>

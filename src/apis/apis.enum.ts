@@ -17,5 +17,10 @@ export const ApiEndpoints = {
     POSTS: `https://jsonplaceholder.typicode.com/posts`,
     SIGNUP: `${BASE_URL}/auth/signup`,
     VERIFY_OTP: `${BASE_URL}/auth/verifyotp`,
-    LOGIN: `${BASE_URL}/auth/signin`,
+    SIGNIN: `${BASE_URL}/auth/signin`,
+    UPDATE_PROFILE: `${BASE_URL}/completeprofiledetails`,
+    GET_ALL_EVENTS: `${BASE_URL}/events`,
+    GET_USER_ACTIVITIES: `${BASE_URL}/events/user/activities`,
+    GET_EVENT_DETAILS: `${BASE_URL}/events`,
+    REGISTER_EVENT: `${BASE_URL}/events`,
 };

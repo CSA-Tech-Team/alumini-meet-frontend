@@ -2,8 +2,15 @@ import { ApiEndpoints, HttpMethod } from "@/apis/apis.enum";
 import { useApi } from "@/apis/useApi";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Todo } from "@/constants/dtos/Todo";
 
+
+export interface Todo {
+    id: number;
+    title: string;
+    body: string;
+    userId: number;
+    completed: boolean;
+}
 
 
 const Health = () => {
