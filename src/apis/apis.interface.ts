@@ -116,19 +116,65 @@ export interface RegisterEventResponse {
     userId: string;
   }
 
-  export interface GetUserActivitiesResponse {
+
+export interface JoinedActivity {
     id: string;
     createdAt: string;
     updatedAt: string;
     eventId: string;
     userId: string;
     event: {
-      id: string;
-      createdAt: string;
-      updatedAt: string;
-      eventName: string;
-      about: string;
+        id: string;
+        createdAt: string;
+        updatedAt: string;
+        eventName: string;
+        about: string;
     };
-  }
+}
 
   
+  export interface SingingRequest {
+    event: string;
+    songDetails: string;
+    topic?: string | null;
+    needKaroke: boolean;
+}
+
+export interface SingingResponse {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    event: string;
+    songDetails: string;
+    topic: string | null;
+    needKaroke: boolean;
+    userId: string;
+}
+
+
+export interface GetUserActivitiesResponse {
+    joinedActivities: JoinedActivity[];
+    addedActivities: SingingResponse[];
+}
+
+export interface SingingRequest {
+    event: string;
+    songDetails: string;
+    topic?: string | null;
+    needKaroke: boolean;
+}
+
+
+// Interface for the user profile response
+export interface UserProfileResponse {
+    user: {
+        sub: string;
+        email: string;
+        name: string;
+        rollno: string;
+        role: string;
+        iat: number;
+        exp: number;
+        isProfileCompleted: boolean;
+    };
+}

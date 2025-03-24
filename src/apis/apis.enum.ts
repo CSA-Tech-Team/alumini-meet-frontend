@@ -23,4 +23,7 @@ export const ApiEndpoints = {
     GET_USER_ACTIVITIES: `${BASE_URL}/events/user/activities`,
     GET_EVENT_DETAILS: `${BASE_URL}/events`,
     REGISTER_EVENT: `${BASE_URL}/events`,
+    ADD_SINGING: `${BASE_URL}/events/user/getActivitydetails`,
+    GET_USER_SINGINGS: `${BASE_URL}/events/user/singings`,
+    ME: `${BASE_URL}/auth/me`,
 };
