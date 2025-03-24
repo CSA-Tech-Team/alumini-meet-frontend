@@ -7,6 +7,7 @@ import SignIn from "./pages/SignIn";
 import Dashboard from "./pages/Dashboard";
 import ProfileForm from "./pages/ProfileForm";
 import EventDetails from "./pages/EventDetails";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile-update" element={<ProfileForm />} />
         <Route path="/events/:eventId" element={<EventDetails />} />
+        <Route path="/profile" element={<Profile />} />
         </Routes>
     </>
   );
