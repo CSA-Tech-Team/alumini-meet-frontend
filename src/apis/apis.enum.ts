@@ -26,4 +26,8 @@ export const ApiEndpoints = {
     ADD_SINGING: `${BASE_URL}/events/user/getActivitydetails`,
     GET_USER_SINGINGS: `${BASE_URL}/events/user/singings`,
     ME: `${BASE_URL}/auth/me`,
+    FOOD_PREFERENCE_COUNT: `${BASE_URL}/completeprofiledetails/foodPreferenceCount`,
+    GENDER_COUNT: `${BASE_URL}/completeprofiledetails/genderCount`,
+    GRAD_YEAR_COUNT: `${BASE_URL}/completeprofiledetails/gradYearCount`,
+    ALL_USERS: `${BASE_URL}/auth/allusers`,
 };

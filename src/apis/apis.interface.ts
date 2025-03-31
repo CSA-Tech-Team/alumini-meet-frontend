@@ -165,7 +165,6 @@ export interface SingingRequest {
 }
 
 
-// Interface for the user profile response
 export interface UserProfileResponse {
     user: {
         sub: string;
@@ -178,3 +177,64 @@ export interface UserProfileResponse {
         isProfileCompleted: boolean;
     };
 }
+
+
+export interface FoodPreferenceCountResponse {
+    vegFoodCount: number;
+    nonvegFoodCount: number;
+}
+
+export interface GenderCountResponse {
+    maleCount: number;
+    femaleCount: number;
+    prefNotCount: number;
+}
+
+export interface GradYearCountResponse {
+    gradYearCount: {
+        _count: {
+            graduationYear: number;
+        };
+        graduationYear: number | null;
+    }[];
+}
+
+export interface AllUsersResponse {
+    id: string;
+    role: string;
+    createdAt: string;
+    updatedAt: string;
+    email: string;
+    isCompleted: boolean;
+    isOTPVerified: boolean;
+    isChangingPassword: boolean;
+    otp: string | null;
+    needsManualVerification: boolean;
+    foodPreference: FoodPreference | null;
+    profile: {
+        id: string;
+        userId: string;
+        createdAt: string;
+        updatedAt: string;
+        name: string;
+        email: string;
+        password: string;
+        gender: string | null;
+        rollNumber: string | null;
+        phoneNumber: string | null;
+        designation: string | null;
+        graduationYear: number | null;
+        address: string | null;
+        course: Course | null;
+    };
+}
+
+  export interface CreateEventRequest {
+    eventName: string
+    about: string
+  }
+  
+  export interface UpdateEventRequest {
+    eventName: string
+    about: string
+  }
