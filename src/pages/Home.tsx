@@ -3,7 +3,6 @@ import Logo from "@/components/home/Logo.tsx";
 import ParallaxComponent from "@/components/home/ParallelaxComponent.tsx";
 import FlippedWords from "@/components/home/FlippedWords.tsx";
 import AnimateSentences from "@/components/home/AnimateSentences.tsx";
-import Gallery from "@/components/home/Gallery.tsx";
 
 const college_name:string = "PSG COLLEGE OF TECHNOLOGY";
 const department_name:string = "DEPARTMENT OF APPLIED MATHEMATICS AND COMPUTATIONAL SCIENCES"
