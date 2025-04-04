@@ -1,12 +1,19 @@
 import { useState } from "react";
 import { useApi } from "@/apis/useApi";
 import { HttpMethod, ApiEndpoints } from "@/apis/apis.enum";
-import { ProfileUpdateRequest, ProfileUpdateResponse, Course, FoodPreference } from "@/apis/apis.interface";
+import {
+    ProfileUpdateRequest,
+    ProfileUpdateResponse,
+    Course,
+    FoodPreference,
+} from "@/apis/apis.interface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { UseMutationResult } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 const courseOptions: { label: string; value: Course }[] = [
     { label: "Software Systems", value: Course.SOFTWARE_SYSTEMS },
@@ -37,7 +44,7 @@ const ProfileForm = () => {
 
     const mutation = useApi<ProfileUpdateResponse, ProfileUpdateRequest>(
         HttpMethod.PUT,
-        true, // Requires authentication
+        true,
         "updateProfile",
         { url: ApiEndpoints.UPDATE_PROFILE }
     ) as UseMutationResult<ProfileUpdateResponse, Error, ProfileUpdateRequest, unknown>;
@@ -51,30 +58,28 @@ const ProfileForm = () => {
     };
 
     const validateForm = () => {
-        // Validate the course and foodPreference fields
         if (!formData.course || !Object.values(Course).includes(formData.course)) {
             toast.error("Please select a valid course.");
             return false;
         }
-
-        if (!formData.foodPreference || !Object.values(FoodPreference).includes(formData.foodPreference)) {
+        if (
+            !formData.foodPreference ||
+            !Object.values(FoodPreference).includes(formData.foodPreference)
+        ) {
             toast.error("Please select a valid food preference.");
             return false;
         }
-
         return true;
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
-        // Validate form data before submitting
         if (!validateForm()) return;
 
         mutation.mutate(formData, {
             onSuccess: () => {
                 toast.success("Profile updated successfully!");
-                navigate("/dashboard"); // Navigate to /dashboard after successful profile update
+                navigate("/dashboard");
             },
             onError: (error: any) => {
                 if (error.response) {
@@ -99,50 +104,110 @@ const ProfileForm = () => {
     };
 
     return (
-        <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Update Profile</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 to-indigo-100 px-4">
+            <Card className="w-full max-w-2xl border border-slate-200 shadow-md">
+                <CardHeader>
+                    <CardTitle className="text-center text-2xl font-semibold text-slate-800">
+                        Update Profile 👤
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                            <Label htmlFor="addr">Address</Label>
+                            <Input id="addr" name="addr" value={formData.addr} onChange={handleChange} />
+                        </div>
 
-                <Input placeholder="Address" name="addr" value={formData.addr} onChange={handleChange} />
+                        <div className="space-y-1">
+                            <Label htmlFor="course">Course</Label>
+                            <select
+                                id="course"
+                                name="course"
+                                value={formData.course}
+                                onChange={handleChange}
+                                className="w-full border px-3 py-2 rounded-md bg-white text-gray-700"
+                            >
+                                <option value="" disabled>Select your course</option>
+                                {courseOptions.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                <select
-                    name="course"
-                    value={formData.course}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border rounded-md text-gray-500"
-                >
-                    <option value="" disabled>Select your course</option>
-                    {courseOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
+                        <div className="space-y-1">
+                            <Label htmlFor="foodPreference">Food Preference</Label>
+                            <select
+                                id="foodPreference"
+                                name="foodPreference"
+                                value={formData.foodPreference}
+                                onChange={handleChange}
+                                className="w-full border px-3 py-2 rounded-md bg-white text-gray-700"
+                            >
+                                <option value="" disabled>Select your preference</option>
+                                {foodPreferenceOptions.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                <select
-                    name="foodPreference"
-                    value={formData.foodPreference}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border rounded-md text-gray-500"
-                >
-                    <option value="" disabled>Select your food preference</option>
-                    {foodPreferenceOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
+                        <div className="space-y-1">
+                            <Label htmlFor="designation">Designation</Label>
+                            <Input
+                                id="designation"
+                                name="designation"
+                                value={formData.designation}
+                                onChange={handleChange}
+                            />
+                        </div>
 
-                <Input placeholder="Designation" name="designation" value={formData.designation} onChange={handleChange} />
-                <Input placeholder="Gender" name="gender" value={formData.gender} onChange={handleChange} />
-                <Input placeholder="Graduation Year" name="gradyear" type="number" value={formData.gradyear} onChange={handleChange} />
-                <Input placeholder="Roll Number" name="rollno" value={formData.rollno} onChange={handleChange} />
-                <Input placeholder="Phone Number" name="phonenumber" type="tel" value={formData.phonenumber} onChange={handleChange} />
+                        <div className="space-y-1">
+                            <Label htmlFor="gender">Gender</Label>
+                            <Input id="gender" name="gender" value={formData.gender} onChange={handleChange} />
+                        </div>
 
-                <Button type="submit" disabled={mutation.isPending}>
-                    {mutation.isPending ? "Updating..." : "Update Profile"}
-                </Button>
-            </form>
+                        <div className="space-y-1">
+                            <Label htmlFor="gradyear">Graduation Year</Label>
+                            <Input
+                                id="gradyear"
+                                name="gradyear"
+                                type="number"
+                                value={formData.gradyear}
+                                onChange={handleChange}
+                            />
+                        </div>
+
+                        <div className="space-y-1">
+                            <Label htmlFor="rollno">Roll Number</Label>
+                            <Input id="rollno" name="rollno" value={formData.rollno} onChange={handleChange} />
+                        </div>
+
+                        <div className="space-y-1">
+                            <Label htmlFor="phonenumber">Phone Number</Label>
+                            <Input
+                                id="phonenumber"
+                                name="phonenumber"
+                                type="tel"
+                                value={formData.phonenumber}
+                                onChange={handleChange}
+                            />
+                        </div>
+
+                        <div className="md:col-span-2 mt-4">
+                            <Button
+                                type="submit"
+                                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                                disabled={mutation.isPending}
+                            >
+                                {mutation.isPending ? "Updating..." : "Update Profile"}
+                            </Button>
+                        </div>
+                    </form>
+                </CardContent>
+            </Card>
         </div>
     );
 };

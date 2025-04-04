@@ -3,7 +3,7 @@ import Logo from "@/components/home/Logo.tsx"
 import ParallaxComponent from "@/components/home/ParallelaxComponent"
 import FlippedWords from "@/components/home/FlippedWords.tsx"
 import AnimateSentences from "@/components/home/AnimateSentences.tsx"
-import { PersonStandingIcon } from "lucide-react"
+import { User } from "lucide-react"
 
 const college_name: string = "PSG COLLEGE OF TECHNOLOGY"
 const department_name: string = "DEPARTMENT OF APPLIED MATHEMATICS AND COMPUTATIONAL SCIENCES"
@@ -24,7 +24,7 @@ export const Home = () => {
       <div className="flex justify-between items-center w-full">
         <Logo />
         <a href="/signup" className="p-2 hover:bg-black/10 rounded-full transition-colors">
-          <PersonStandingIcon className="cursor-pointer w-6 h-6 sm:w-7 sm:h-7" />
+          <User className="cursor-pointer w-6 h-6 sm:w-7 sm:h-7" />
         </a>
       </div>
 

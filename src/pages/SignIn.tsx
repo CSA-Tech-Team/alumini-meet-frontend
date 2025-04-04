@@ -2,15 +2,19 @@ import { useState } from "react";
 import { useApi } from "@/apis/useApi";
 import { HttpMethod, ApiEndpoints } from "@/apis/apis.enum";
 import { SignInRequest, SignInResponse } from "@/apis/apis.interface";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { UseMutationResult } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { localStorageService } from "@/services/localStorage.service";
+import { UseMutationResult } from "@tanstack/react-query";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 const SignIn = () => {
     const navigate = useNavigate();
+
     const [formData, setFormData] = useState<SignInRequest>({
         email: "",
         password: "",
@@ -20,15 +24,15 @@ const SignIn = () => {
         HttpMethod.POST,
         false,
         "signin",
-        { url: ApiEndpoints.SIGNIN, body: formData }
+        {
+            url: ApiEndpoints.SIGNIN,
+            body: formData,
+        }
     ) as UseMutationResult<SignInResponse, Error, void, unknown>;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -36,13 +40,8 @@ const SignIn = () => {
         mutation.mutate(undefined, {
             onSuccess: (data) => {
                 toast.success(data.message);
-
-                // Store access token in localStorage
                 localStorageService.setItem("access_token", data.access_token);
-
-                // Navigate based on profile completion
-                // TODO: Remove undefined condition once api is fixed
-                if (data.isProfileCompleted === undefined || data.isProfileCompleted === true) {
+                if (data.isProfileCompleted === undefined || data.isProfileCompleted) {
                     navigate("/dashboard");
                 } else {
                     navigate("/profile-update");
@@ -51,7 +50,6 @@ const SignIn = () => {
             onError: (error: any) => {
                 if (error.response) {
                     const { status, data } = error.response;
-
                     if (status === 400) {
                         if (Array.isArray(data.message)) {
                             data.message.forEach((msg: string) => toast.error(msg));
@@ -73,25 +71,53 @@ const SignIn = () => {
     };
 
     return (
-        <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Sign In</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <Input
-                    placeholder="Email"
-                    name="email"
-                    type="email"
-                    onChange={handleChange}
-                />
-                <Input
-                    placeholder="Password"
-                    name="password"
-                    type="password"
-                    onChange={handleChange}
-                />
-                <Button type="submit" disabled={mutation.isPending}>
-                    {mutation.isPending ? "Signing In..." : "Sign In"}
-                </Button>
-            </form>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 px-4">
+            <Card className="w-full max-w-md shadow-xl border-2 border-slate-300">
+                <CardHeader>
+                    <CardTitle className="text-center text-2xl font-semibold text-slate-800">
+                        Welcome Back 👋
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input
+                                id="email"
+                                name="email"
+                                type="email"
+                                placeholder="you@example.com"
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="password">Password</Label>
+                            <Input
+                                id="password"
+                                name="password"
+                                type="password"
+                                placeholder="••••••••"
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <Button
+                            type="submit"
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                            disabled={mutation.isPending}
+                        >
+                            {mutation.isPending ? "Signing In..." : "Sign In"}
+                        </Button>
+                    </form>
+                    <div className="text-sm text-center text-gray-600 mt-6">
+                        Don’t have an account?{" "}
+                        <Link to="/signup" className="text-blue-600 hover:underline font-medium">
+                            Sign Up
+                        </Link>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     );
 };

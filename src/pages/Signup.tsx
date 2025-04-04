@@ -2,20 +2,23 @@ import { useState } from "react";
 import { useApi } from "@/apis/useApi";
 import { HttpMethod, ApiEndpoints } from "@/apis/apis.enum";
 import { SignupRequest, SignupResponse } from "@/apis/apis.interface";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { UseMutationResult } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { localStorageService } from "@/services/localStorage.service";
+import { UseMutationResult } from "@tanstack/react-query";
 
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 const Signup = () => {
     const navigate = useNavigate();
+
     const [formData, setFormData] = useState<SignupRequest>({
         email: "",
         password: "",
-        name: ""
+        name: "",
     });
 
     const mutation = useApi<SignupResponse>(
@@ -25,13 +28,9 @@ const Signup = () => {
         { url: ApiEndpoints.SIGNUP, body: formData }
     ) as UseMutationResult<SignupResponse, Error, void, unknown>;
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-
-        setFormData((prev) => ({
-            ...prev,
-            [name]: name === "gradyear" ? Number(value) : value,
-        }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -39,15 +38,12 @@ const Signup = () => {
         mutation.mutate(undefined, {
             onSuccess: (data) => {
                 toast.success(data.message);
-                
                 localStorageService.setItem("email", formData.email);
-                
                 navigate("/verify-otp");
             },
             onError: (error: any) => {
                 if (error.response) {
                     const { status, data } = error.response;
-                    
                     if (status === 400) {
                         if (Array.isArray(data.message)) {
                             data.message.forEach((msg: string) => toast.error(msg));
@@ -56,15 +52,12 @@ const Signup = () => {
                         } else {
                             toast.error("Invalid request. Please check your input.");
                         }
-                    } 
-                    else if (status === 500) {
+                    } else if (status === 500) {
                         toast.error("Server error! Please try again later.");
-                    } 
-                    else {
+                    } else {
                         toast.error(data.message || "Something went wrong.");
                     }
-                } 
-                else {
+                } else {
                     toast.error("Network error. Please check your connection.");
                 }
             },
@@ -72,16 +65,64 @@ const Signup = () => {
     };
 
     return (
-        <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Signup</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <Input placeholder="Email" name="email" type="email" onChange={handleChange} />
-                <Input placeholder="Password" name="password" type="password" onChange={handleChange} />
-                <Input placeholder="Name" name="name" onChange={handleChange} />
-                <Button type="submit" disabled={mutation.isPending}>
-                    {mutation.isPending ? "Signing Up..." : "Sign Up"}
-                </Button>
-            </form>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 px-4">
+            <Card className="w-full max-w-md shadow-xl border-2 border-slate-300">
+                <CardHeader>
+                    <CardTitle className="text-center text-2xl font-semibold text-slate-800">
+                        Create Your Account ✨
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="name">Name</Label>
+                            <Input
+                                id="name"
+                                name="name"
+                                type="text"
+                                placeholder="Your Name"
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input
+                                id="email"
+                                name="email"
+                                type="email"
+                                placeholder="you@example.com"
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="password">Password</Label>
+                            <Input
+                                id="password"
+                                name="password"
+                                type="password"
+                                placeholder="••••••••"
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <Button
+                            type="submit"
+                            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+                            disabled={mutation.isPending}
+                        >
+                            {mutation.isPending ? "Signing Up..." : "Sign Up"}
+                        </Button>
+                    </form>
+                    <div className="text-sm text-center text-gray-600 mt-6">
+                        Already have an account?{" "}
+                        <Link to="/signin" className="text-emerald-600 hover:underline font-medium">
+                            Sign In
+                        </Link>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     );
 };

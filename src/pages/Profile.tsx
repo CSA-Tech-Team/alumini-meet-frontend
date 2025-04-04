@@ -6,8 +6,8 @@ import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserProfileResponse } from "@/apis/apis.interface";
 import Navbar from "@/components/shared/Navbar";
+import { BadgeCheck, XCircle } from "lucide-react";
 
-// Hook to fetch user profile
 const useUserProfile = () => {
     return useApi<UserProfileResponse>(
         HttpMethod.GET,
@@ -21,54 +21,56 @@ const Profile = () => {
     const navigate = useNavigate();
     const userProfileQuery = useUserProfile();
 
-    // Handle loading state
     if (userProfileQuery.isLoading) {
-        return <p className="text-center text-gray-500">Loading profile...</p>;
+        return (
+            <div className="flex h-screen items-center justify-center bg-slate-50">
+                <p className="text-lg text-gray-500 animate-pulse">Loading profile...</p>
+            </div>
+        );
     }
 
-    // Handle error state (e.g., 401 Unauthorized)
     if (userProfileQuery.isError) {
         toast.error("You've been signed out. Please sign in again.");
         navigate("/signin");
         return null;
     }
 
-    // Safely access user data (data is guaranteed here since isError and isLoading are false)
     const user = userProfileQuery.data?.user;
 
-    // If data is somehow still undefined (edge case), handle it gracefully
     if (!user) {
-        return <p className="text-center text-red-500">Failed to load user data.</p>;
+        return (
+            <div className="flex h-screen items-center justify-center bg-slate-50">
+                <p className="text-lg text-red-500 font-medium">Failed to load user data.</p>
+            </div>
+        );
     }
 
     return (
         <>
             <Navbar />
-            <div className="max-w-md mx-auto p-6">
-                <Card className="shadow-lg">
+            <div className="min-h-screen bg-gradient-to-br from-white to-sky-50 py-10 px-4 flex justify-center">
+                <Card className="w-full max-w-2xl shadow-xl border border-slate-200 rounded-2xl">
                     <CardHeader>
-                        <CardTitle className="text-2xl font-bold">Profile</CardTitle>
+                        <CardTitle className="text-center text-3xl font-bold text-indigo-700">
+                            👤 Your Profile
+                        </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div>
-                            <p className="text-sm text-gray-600">Name</p>
-                            <p className="text-lg font-semibold">{user.name}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-gray-600">Email</p>
-                            <p className="text-lg font-semibold">{user.email}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-gray-600">Roll Number</p>
-                            <p className="text-lg font-semibold">{user.rollno}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-gray-600">Role</p>
-                            <p className="text-lg font-semibold">{user.role}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-gray-600">Profile Completed</p>
-                            <p className="text-lg font-semibold">{user.isProfileCompleted ? "Yes" : "No"}</p>
+                    <CardContent className="space-y-5 px-6 pb-6">
+                        <ProfileField label="Name" value={user.name} />
+                        <ProfileField label="Email" value={user.email} />
+                        <ProfileField label="Roll Number" value={user.rollno} />
+                        <ProfileField label="Role" value={user.role} />
+                        <div className="flex items-center justify-between">
+                            <p className="text-gray-600 font-medium">Profile Completed</p>
+                            {user.isProfileCompleted ? (
+                                <span className="flex items-center gap-1 text-green-600 font-semibold">
+                                    <BadgeCheck className="w-5 h-5" /> Yes
+                                </span>
+                            ) : (
+                                <span className="flex items-center gap-1 text-red-500 font-semibold">
+                                    <XCircle className="w-5 h-5" /> No
+                                </span>
+                            )}
                         </div>
                     </CardContent>
                 </Card>
@@ -76,5 +78,13 @@ const Profile = () => {
         </>
     );
 };
+
+// Helper component for clean field display
+const ProfileField = ({ label, value }: { label: string; value: string }) => (
+    <div className="flex items-center justify-between">
+        <p className="text-gray-600 font-medium">{label}</p>
+        <p className="text-slate-800 font-semibold">{value}</p>
+    </div>
+);
 
 export default Profile;
