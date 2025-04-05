@@ -51,7 +51,7 @@ export const Home = () => {
       <ParallaxComponent />
 
       <div className="flex flex-col items-center justify-center py-10 sm:py-16 md:py-20 px-4 sm:px-8 md:px-16 lg:px-24">
-        <FlippedWords text={heading}  />
+        <FlippedWords text={heading} />
         <div className="max-w-3xl mx-auto">
           <AnimateSentences
             content={content}

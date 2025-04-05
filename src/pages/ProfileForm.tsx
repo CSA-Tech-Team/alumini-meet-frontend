@@ -6,6 +6,7 @@ import {
     ProfileUpdateResponse,
     Course,
     FoodPreference,
+    Gender
 } from "@/apis/apis.interface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,8 +15,9 @@ import { UseMutationResult } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { z, ZodIssue } from "zod";
 
-const courseOptions: { label: string; value: Course }[] = [
+const courseOptions = [
     { label: "Software Systems", value: Course.SOFTWARE_SYSTEMS },
     { label: "Cyber Security", value: Course.CYBER_SECURITY },
     { label: "Data Science", value: Course.DATA_SCIENCE },
@@ -23,10 +25,54 @@ const courseOptions: { label: string; value: Course }[] = [
     { label: "Applied Mathematics", value: Course.APPLIED_MATHEMATICS },
 ];
 
-const foodPreferenceOptions: { label: string; value: FoodPreference }[] = [
+const foodPreferenceOptions = [
     { label: "Veg", value: FoodPreference.VEG },
     { label: "Non-Veg", value: FoodPreference.NON_VEG },
 ];
+
+const profileSchema = z.object({
+    addr: z.string().optional(),
+
+    course: z
+        .nativeEnum(Course, {
+            errorMap: () => ({ message: "Please select a valid course" }),
+        })
+        .optional(),
+
+    foodPreference: z.nativeEnum(FoodPreference, {
+        errorMap: () => ({ message: "Please select a food preference" }),
+    }),
+
+    designation: z.string().optional(),
+
+    gender: z.nativeEnum(Gender, {
+        errorMap: () => ({ message: "Please select a gender" }),
+    }),
+
+    gradyear: z
+        .union([
+            z.number()
+                .max(2025, "Graduation year must be 2025 or earlier")
+                .refine((val) => !isNaN(val), {
+                    message: "Graduation year must be a number",
+                }),
+            z.undefined(),
+        ]),
+
+    rollno: z
+        .string()
+        .trim()
+        .optional()
+        .refine((val) => !val || val.length > 0, {
+            message: "Roll number is required",
+        }),
+
+    phonenumber: z
+        .string({ required_error: "Phone number is required" })
+        .regex(/^\d{10}$/, "Phone number must be 10 digits"),
+});
+
+
 
 const ProfileForm = () => {
     const [formData, setFormData] = useState<ProfileUpdateRequest>({
@@ -34,7 +80,7 @@ const ProfileForm = () => {
         course: "" as Course,
         foodPreference: "" as FoodPreference,
         designation: "",
-        gender: "",
+        gender: "" as Gender,
         gradyear: 2027,
         rollno: "",
         phonenumber: "",
@@ -57,24 +103,14 @@ const ProfileForm = () => {
         }));
     };
 
-    const validateForm = () => {
-        if (!formData.course || !Object.values(Course).includes(formData.course)) {
-            toast.error("Please select a valid course.");
-            return false;
-        }
-        if (
-            !formData.foodPreference ||
-            !Object.values(FoodPreference).includes(formData.foodPreference)
-        ) {
-            toast.error("Please select a valid food preference.");
-            return false;
-        }
-        return true;
-    };
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!validateForm()) return;
+        const validation = profileSchema.safeParse(formData);
+
+        if (!validation.success) {
+            validation.error.errors.forEach((err: ZodIssue) => toast.error(err.message));
+            return;
+        }
 
         mutation.mutate(formData, {
             onSuccess: () => {
@@ -84,7 +120,6 @@ const ProfileForm = () => {
             onError: (error: any) => {
                 if (error.response) {
                     const { status, data } = error.response;
-
                     if (status === 401) {
                         toast.error("Unauthorized! Please login again.");
                     } else if (status === 400) {
@@ -166,7 +201,20 @@ const ProfileForm = () => {
 
                         <div className="space-y-1">
                             <Label htmlFor="gender">Gender</Label>
-                            <Input id="gender" name="gender" value={formData.gender} onChange={handleChange} />
+                            <select
+                                id="gender"
+                                name="gender"
+                                value={formData.gender}
+                                onChange={handleChange}
+                                className="w-full px-4 py-2 border rounded-md text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            >
+                                <option value="" disabled>Select your gender</option>
+                                {Object.values(Gender).map((gender) => (
+                                    <option key={gender} value={gender}>
+                                        {gender === Gender.PreferNotToSay ? "Prefer not to say" : gender}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className="space-y-1">

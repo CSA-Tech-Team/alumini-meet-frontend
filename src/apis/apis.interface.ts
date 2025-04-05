@@ -8,6 +8,11 @@ export interface ApiConfig {
     params?: Record<string, any>;
 }
 
+export enum Gender {
+    Male = "Male",
+    Female = "Female",
+    PreferNotToSay = "PreferNotToSay",
+}
 
 // Request DTO for Signup
 export interface SignupRequest {
@@ -114,7 +119,7 @@ export interface RegisterEventResponse {
     updatedAt: string;
     eventId: string;
     userId: string;
-  }
+}
 
 
 export interface JoinedActivity {
@@ -132,8 +137,8 @@ export interface JoinedActivity {
     };
 }
 
-  
-  export interface SingingRequest {
+
+export interface SingingRequest {
     event: string;
     songDetails: string;
     topic?: string | null;
@@ -229,12 +234,12 @@ export interface AllUsersResponse {
     };
 }
 
-  export interface CreateEventRequest {
+export interface CreateEventRequest {
     eventName: string
     about: string
-  }
-  
-  export interface UpdateEventRequest {
+}
+
+export interface UpdateEventRequest {
     eventName: string
     about: string
-  }
+}
