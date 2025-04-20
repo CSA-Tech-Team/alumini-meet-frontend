@@ -1,116 +1,175 @@
-import FlippedWords from "@/components/home/FlippedWords.tsx";
-import AnimateSentences from "@/components/home/AnimateSentences.tsx";
-import { useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import { motion } from "framer-motion";
-import { PSG_A_block_Cropped } from "@/assets";
+import { useState, useEffect, useRef } from 'react';
 
-const heading: string = "Do you\nRemember this?";
-const content: string = "Our nostalgic memories, never disappears";
+// Import images from gallery_assets
+const images = import.meta.glob('./gallery_assets/*.{jpg,jpeg,png,gif,webp}', { eager: true, as: 'url' });
 
-// You can replace these with your actual images
-const images = Array(17).fill(PSG_A_block_Cropped);
+interface Photo {
+  src: string;
+  width: number;
+  height: number;
+}
 
-export const ParallaxScroll = ({
-                                   images,
-                                   className,
-                               }: {
-    images: string[];
-    className?: string;
-}) => {
-    const gridRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: gridRef,
-        offset: ["start start", "end start"],
-    });
+// Convert imported images to Photo type with default aspect ratio
+const photos: Photo[] = Object.values(images).map((src) => ({
+  src,
+  width: 4,
+  height: 3,
+}));
 
-    const translateFirst = useTransform(scrollYProgress, [0, 1], [0, -200]);
-    const translateSecond = useTransform(scrollYProgress, [0, 1], [0, 200]);
-    const translateThird = useTransform(scrollYProgress, [0, 1], [0, -200]);
+const PhotoGallery: React.FC = () => {
+  const [windowWidth, setWindowWidth] = useState<number>(
+    typeof window !== 'undefined' ? window.innerWidth : 0
+  );
 
-    const third = Math.ceil(images.length / 3);
-    const firstPart = images.slice(0, third);
-    const secondPart = images.slice(third, 2 * third);
-    const thirdPart = images.slice(2 * third);
+  const getColumnDistribution = () => {
+    if (windowWidth < 640) {
+      return { column1: photos, column2: [], column3: [] };
+    } else if (windowWidth < 1024) {
+      return {
+        column1: photos.filter((_, i) => i % 2 === 0),
+        column2: photos.filter((_, i) => i % 2 === 1),
+        column3: [],
+      };
+    } else {
+      return {
+        column1: photos.filter((_, i) => i % 3 === 0),
+        column2: photos.filter((_, i) => i % 3 === 1),
+        column3: photos.filter((_, i) => i % 3 === 2),
+      };
+    }
+  };
 
-    return (
+  const { column1, column2, column3 } = getColumnDistribution();
+
+  const col1Ref = useRef<HTMLDivElement>(null);
+  const col2Ref = useRef<HTMLDivElement>(null);
+  const col3Ref = useRef<HTMLDivElement>(null);
+
+  const speeds = [0.5, 0.7, 0.4];
+  const [scrollPositions, setScrollPositions] = useState<number[]>([0, 0, 0]);
+  const animationFrameRef = useRef<number | null>(null);
+  const lastTimestampRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const animate = (timestamp: number) => {
+      if (!lastTimestampRef.current) {
+        lastTimestampRef.current = timestamp;
+        animationFrameRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      const deltaTime = timestamp - lastTimestampRef.current;
+      lastTimestampRef.current = timestamp;
+
+      const newPositions = [...scrollPositions];
+      let activeColumns: (HTMLDivElement | null)[] = [];
+
+      if (windowWidth < 640) {
+        activeColumns = [col1Ref.current];
+      } else if (windowWidth < 1024) {
+        activeColumns = [col1Ref.current, col2Ref.current];
+      } else {
+        activeColumns = [col1Ref.current, col2Ref.current, col3Ref.current];
+      }
+
+      activeColumns.forEach((col, idx) => {
+        if (col) {
+          const speed = speeds[idx];
+          const delta = (speed * deltaTime) / 16;
+          newPositions[idx] += delta;
+          col.scrollTop = newPositions[idx];
+
+          const maxScroll = col.scrollHeight / 2;
+          if (newPositions[idx] >= maxScroll) {
+            newPositions[idx] = 0;
+            col.scrollTop = 0;
+          }
+        }
+      });
+
+      setScrollPositions(newPositions);
+      animationFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+
+    animationFrameRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [windowWidth]);
+
+  const duplicateImages = (columnImages: Photo[]) => [
+    ...columnImages,
+    ...columnImages,
+  ];
+
+  return (
+    <div className="relative min-h-screen px-4 sm:px-6 py-10 overflow-hidden">
+      <div className="absolute inset-0" />
+      <div className="relative z-10 w-full sm:max-w-[90%] md:max-w-[85%] mx-auto">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 my-4 sm:my-8 text-center lg:text-left font-cormorant">
+          PHOTO GALLERY
+        </h1>
+
         <div
-            className={`h-[40rem] items-start w-full ${className}`}
-            ref={gridRef}
+          className={`grid gap-4 h-[50rem] sm:h-[60rem] overflow-auto scroll-none md:h-[70rem] lg:h-[80rem] ${
+            windowWidth < 640
+              ? 'grid-cols-1'
+              : windowWidth < 1024
+              ? 'grid-cols-2'
+              : 'grid-cols-3'
+          }`}
         >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start max-w-5xl mx-auto gap-10 py-40 px-10">
-                <div className="grid gap-10">
-                    {firstPart.map((el, idx) => (
-                        <motion.div
-                            style={{ y: translateFirst }}
-                            key={`grid-1-${idx}`}
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: idx * 0.1 }}
-                        >
-                            <motion.img
-                                src={el}
-                                className="h-80 w-full object-cover object-left-top rounded-lg gap-10 !m-0 !p-0"
-                                height={400}
-                                width={400}
-                                alt="thumbnail"
-                            />
-                        </motion.div>
-                    ))}
+          <div ref={col1Ref} className="h-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <div className="space-y-4 pb-4">
+              {duplicateImages(column1).map((photo, idx) => (
+                <div key={`col1-${idx}`} className="rounded-lg overflow-hidden shadow-md">
+                  <img src={photo.src} alt={`Image ${idx}`} className="w-full object-cover" loading="lazy" />
                 </div>
-                <div className="grid gap-10">
-                    {secondPart.map((el, idx) => (
-                        <motion.div
-                            style={{ y: translateSecond }}
-                            key={`grid-2-${idx}`}
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: idx * 0.1 + 0.1 }}
-                        >
-                            <motion.img
-                                src={el}
-                                className="h-80 w-full object-cover object-left-top rounded-lg gap-10 !m-0 !p-0"
-                                height={400}
-                                width={400}
-                                alt="thumbnail"
-                            />
-                        </motion.div>
-                    ))}
-                </div>
-                <div className="grid gap-10">
-                    {thirdPart.map((el, idx) => (
-                        <motion.div
-                            style={{ y: translateThird }}
-                            key={`grid-3-${idx}`}
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: idx * 0.1 + 0.2 }}
-                        >
-                            <motion.img
-                                src={el}
-                                className="h-80 w-full object-cover object-left-top rounded-lg gap-10 !m-0 !p-0"
-                                height={400}
-                                width={400}
-                                alt="thumbnail"
-                            />
-                        </motion.div>
-                    ))}
-                </div>
+              ))}
             </div>
+          </div>
+
+          {windowWidth >= 640 && (
+            <div ref={col2Ref} className="h-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+              <div className="space-y-4 pb-4">
+                {duplicateImages(column2).map((photo, idx) => (
+                  <div key={`col2-${idx}`} className="rounded-lg overflow-hidden shadow-md">
+                    <img src={photo.src} alt={`Image ${idx}`} className="w-full object-cover" loading="lazy" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {windowWidth >= 1024 && (
+            <div ref={col3Ref} className="overflow-hidden h-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+              <div className="space-y-4 pb-4">
+                {duplicateImages(column3).map((photo, idx) => (
+                  <div key={`col3-${idx}`} className="rounded-lg overflow-hidden shadow-md">
+                    <img src={photo.src} alt={`Image ${idx}`} className="w-full object-cover" loading="lazy" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
-const Gallery = () => {
-    return (
-        <div className="my-20">
-            <div className="max-w-6xl mx-auto px-4 mb-10">
-                <FlippedWords text={heading} indent={true} />
-                <AnimateSentences content={content} className={''} />
-            </div>
-            <ParallaxScroll images={images} />
-        </div>
-    );
-};
-
-export default Gallery;
+export default PhotoGallery;

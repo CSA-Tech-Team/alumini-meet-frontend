@@ -4,6 +4,7 @@ import ParallaxComponent from "@/components/home/ParallelaxComponent"
 import FlippedWords from "@/components/home/FlippedWords.tsx"
 import AnimateSentences from "@/components/home/AnimateSentences.tsx"
 import { User } from "lucide-react"
+import PhotoGallery from "@/components/home/Gallery"
 
 const college_name: string = "PSG COLLEGE OF TECHNOLOGY"
 const department_name: string = "DEPARTMENT OF APPLIED MATHEMATICS AND COMPUTATIONAL SCIENCES"
@@ -49,7 +50,7 @@ export const Home = () => {
       </section>
 
       <ParallaxComponent />
-
+      <PhotoGallery />
       <div className="flex flex-col items-center justify-center py-10 sm:py-16 md:py-20 px-4 sm:px-8 md:px-16 lg:px-24">
         <FlippedWords text={heading} />
         <div className="max-w-3xl mx-auto">
