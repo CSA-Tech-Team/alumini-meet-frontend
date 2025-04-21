@@ -6,6 +6,7 @@ import DonutChart from "@/components/charts/DonutChart";
 import GenericTable from "@/components/shared/GenericTable";
 import { useQuery } from "@tanstack/react-query"; // Assuming react-query is used
 import axios from "axios"; // Assuming axios for API calls
+import { BACKEND_URL } from "@/constants/styles";
 
 // Define interfaces for the new API responses
 interface CourseCount {
@@ -45,7 +46,7 @@ interface Event {
 const fetchCourseCount = async (): Promise<CourseCount[]> => {
   const token = localStorage.getItem("access_token");
   if (!token) throw new Error("No access token found");
-  const response = await axios.get("http://localhost:5000/events/user/course", {
+  const response = await axios.get(`${BACKEND_URL}/events/user/course`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;
@@ -55,7 +56,7 @@ const fetchCourseCount = async (): Promise<CourseCount[]> => {
 const fetchEvents = async (): Promise<Event[]> => {
   const token = localStorage.getItem("access_token");
   if (!token) throw new Error("No access token found");
-  const response = await axios.get("http://localhost:5000/events", {
+  const response = await axios.get(`${BACKEND_URL}/events`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;
