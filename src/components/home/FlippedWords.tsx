@@ -30,7 +30,7 @@ const FlippedWords = ({ text, indent = false, className = '' }: { text: string, 
                                         viewport={{ once: true }} 
                                         className={`inline-block font-cormorant text-[clamp(2.5rem,8vw,3.5rem)] sm:text-[5rem] md:text-[8rem] lg:text-[8rem] leading-[1] tracking-tight ${className}`}
                                     >
-                                        {char.toUpperCase()}
+                                        {char}
                                     </motion.span>
                                 ))}
                                 <span className="w-[clamp(4px,1.5vw,8px)]" />

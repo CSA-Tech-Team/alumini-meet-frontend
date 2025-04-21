@@ -2,7 +2,9 @@
 
 import { useRef } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
-import { PSG_A_block_Cropped, PSG_Medium_Cropped } from "@/assets"
+import { PSG_Medium_Cropped } from "@/assets"
+import ClgPic from "@/assets/clgpic.webp"
+import BridgePic from "@/assets/bridge.jpg"
 
 const ParallaxComponent = () => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -25,7 +27,7 @@ const ParallaxComponent = () => {
     <div
       ref={containerRef}
       className="relative w-full overflow-hidden"
-      style={{ height: "100vh" }} 
+      style={{ height: "100vh" }}
     >
       <div className="sticky top-0 w-full h-full flex items-center justify-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -40,7 +42,7 @@ const ParallaxComponent = () => {
             >
               <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg shadow-xl">
                 <img
-                  src={PSG_Medium_Cropped || "/placeholder.svg"}
+                  src={ClgPic || "/placeholder.svg"}
                   className="w-full h-full object-cover object-center"
                   alt="PSG Campus Main View"
                   loading="lazy"
@@ -59,7 +61,7 @@ const ParallaxComponent = () => {
               >
                 <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg shadow-xl">
                   <img
-                    src={PSG_A_block_Cropped || "/placeholder.svg"}
+                    src={PSG_Medium_Cropped || "/placeholder.svg"}
                     className="w-full h-full object-cover object-center"
                     alt="PSG A Block View 1"
                     loading="lazy"
@@ -77,7 +79,7 @@ const ParallaxComponent = () => {
               >
                 <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg shadow-xl">
                   <img
-                    src={PSG_A_block_Cropped || "/placeholder.svg"}
+                    src={BridgePic || "/placeholder.svg"}
                     className="w-full h-full object-cover object-center"
                     alt="PSG A Block View 2"
                     loading="lazy"
