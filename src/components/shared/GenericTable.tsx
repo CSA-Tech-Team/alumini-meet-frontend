@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Table,
   TableBody,
@@ -8,40 +9,63 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface Column {
-  field: string;
+/**
+ * Column definition supporting optional custom cell rendering.
+ */
+export interface Column<T = any> {
+  /**
+   * Key in the row data to display
+   */
+  field: keyof T;
+  /**
+   * Column header label
+   */
   headerName: string;
+  /**
+   * Optional custom renderer: receives cell value and full row
+   */
+  cellRenderer?: (value: T[keyof T], row: T) => React.ReactNode;
 }
 
-interface GenericTableProps {
-  data: any[];
-  columns: Column[];
+interface GenericTableProps<T> {
+  data: T[];
+  columns: Column<T>[];
   caption?: string;
 }
 
-const GenericTable: React.FC<GenericTableProps> = ({ data, columns, caption }) => {
+/**
+ * A generic table component that renders arbitrary data with optional custom cell renderers.
+ */
+function GenericTable<T>({ data, columns, caption }: GenericTableProps<T>) {
   return (
     <Table>
       {caption && <TableCaption>{caption}</TableCaption>}
       <TableHeader>
         <TableRow>
           {columns.map((col) => (
-            <TableHead key={col.field}>{col.headerName}</TableHead>
+            <TableHead key={String(col.field)}>{col.headerName}</TableHead>
           ))}
         </TableRow>
       </TableHeader>
       <TableBody>
         {data.length > 0 ? (
-          data.map((row, index) => (
-            <TableRow key={index}>
-              {columns.map((col) => (
-                <TableCell key={col.field}>{row[col.field] ?? "-"}</TableCell>
-              ))}
+          data.map((row, rowIndex) => (
+            <TableRow key={rowIndex}>
+              {columns.map((col) => {
+                const rawValue = row[col.field];
+                return (
+                  <TableCell key={String(col.field)}>
+                    {col.cellRenderer
+                      ? (col.cellRenderer(rawValue, row) as React.ReactNode)
+                      : (rawValue as React.ReactNode) ?? "-"}
+                  </TableCell>
+                );
+              })}
             </TableRow>
           ))
         ) : (
           <TableRow>
-            <TableCell colSpan={columns.length} className="text-center">
+            <TableCell colSpan={columns.length as number} className="text-center">
               No data available
             </TableCell>
           </TableRow>
@@ -49,6 +73,6 @@ const GenericTable: React.FC<GenericTableProps> = ({ data, columns, caption }) =
       </TableBody>
     </Table>
   );
-};
+}
 
 export default GenericTable;

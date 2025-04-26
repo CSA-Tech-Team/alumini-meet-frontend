@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { primary } from "@/constants/styles.ts"
 
 // Import images from gallery_assets
 const images = import.meta.glob('./gallery_assets/*.{jpg,jpeg,png,gif,webp}', { eager: true, as: 'url' });
@@ -120,55 +121,54 @@ const PhotoGallery: React.FC = () => {
     <div className="relative min-h-screen px-4 sm:px-6 py-10 overflow-hidden">
       <div className="absolute inset-0" />
       <div className="relative z-10 w-full sm:max-w-[90%] md:max-w-[85%] mx-auto">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 my-4 sm:my-8 text-center lg:text-left font-cormorant">
+        <h1 className={` ${primary} text-2xl sm:text-3xl font-bold  my-4 sm:my-8 text-center lg:text-left font-cormorant`}>
           PHOTO GALLERY
         </h1>
 
-        <div
-          className={`grid gap-4 h-[50rem] sm:h-[60rem] overflow-auto scroll-none md:h-[70rem] lg:h-[80rem] ${
-            windowWidth < 640
-              ? 'grid-cols-1'
-              : windowWidth < 1024
+      <div
+        className={`grid gap-4 h-[50rem] sm:h-[60rem] overflow-auto scroll-none md:h-[70rem] lg:h-[80rem] ${windowWidth < 640
+            ? 'grid-cols-1'
+            : windowWidth < 1024
               ? 'grid-cols-2'
               : 'grid-cols-3'
           }`}
-        >
-          <div ref={col1Ref} className="h-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      >
+        <div ref={col1Ref} className="h-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div className="space-y-4 pb-4">
+            {duplicateImages(column1).map((photo, idx) => (
+              <div key={`col1-${idx}`} className="rounded-lg overflow-hidden shadow-md">
+                <img src={photo.src} alt={`Image ${idx}`} className="w-full object-cover" loading="lazy" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {windowWidth >= 640 && (
+          <div ref={col2Ref} className="h-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             <div className="space-y-4 pb-4">
-              {duplicateImages(column1).map((photo, idx) => (
-                <div key={`col1-${idx}`} className="rounded-lg overflow-hidden shadow-md">
+              {duplicateImages(column2).map((photo, idx) => (
+                <div key={`col2-${idx}`} className="rounded-lg overflow-hidden shadow-md">
                   <img src={photo.src} alt={`Image ${idx}`} className="w-full object-cover" loading="lazy" />
                 </div>
               ))}
             </div>
           </div>
+        )}
 
-          {windowWidth >= 640 && (
-            <div ref={col2Ref} className="h-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              <div className="space-y-4 pb-4">
-                {duplicateImages(column2).map((photo, idx) => (
-                  <div key={`col2-${idx}`} className="rounded-lg overflow-hidden shadow-md">
-                    <img src={photo.src} alt={`Image ${idx}`} className="w-full object-cover" loading="lazy" />
-                  </div>
-                ))}
-              </div>
+        {windowWidth >= 1024 && (
+          <div ref={col3Ref} className="overflow-hidden h-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <div className="space-y-4 pb-4">
+              {duplicateImages(column3).map((photo, idx) => (
+                <div key={`col3-${idx}`} className="rounded-lg overflow-hidden shadow-md">
+                  <img src={photo.src} alt={`Image ${idx}`} className="w-full object-cover" loading="lazy" />
+                </div>
+              ))}
             </div>
-          )}
-
-          {windowWidth >= 1024 && (
-            <div ref={col3Ref} className="overflow-hidden h-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              <div className="space-y-4 pb-4">
-                {duplicateImages(column3).map((photo, idx) => (
-                  <div key={`col3-${idx}`} className="rounded-lg overflow-hidden shadow-md">
-                    <img src={photo.src} alt={`Image ${idx}`} className="w-full object-cover" loading="lazy" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
+    </div >
   );
 };
 

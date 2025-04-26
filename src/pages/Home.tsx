@@ -6,6 +6,7 @@ import AnimateSentences from "@/components/home/AnimateSentences.tsx"
 import { User } from "lucide-react"
 import PhotoGallery from "@/components/home/Gallery"
 import Timer from "@/components/home/Timer"
+import facultiesPic from "@/assets/faculties.png"
 
 const college_name: string = "PSG COLLEGE OF TECHNOLOGY"
 const department_name: string = "DEPARTMENT OF APPLIED MATHEMATICS AND COMPUTATIONAL SCIENCES"
@@ -53,13 +54,28 @@ export const Home = () => {
       <ParallaxComponent />
 
       <Timer />
+
+      {/* Faculty Photo Section */}
+      <section className="flex flex-col items-center justify-center py-10 sm:py-16">
+        <h3 className={`font-bold ${primary} text-xl sm:text-2xl md:text-3xl mb-6 text-center`}>
+          Our Esteemed Faculty
+        </h3>
+        <div className="w-full max-w-4xl">
+          <img
+            src={facultiesPic}
+            alt="Faculty of PSG College of Technology"
+            className="w-full h-auto object-cover rounded-lg shadow-lg"
+          />
+        </div>
+      </section>
+
       <PhotoGallery />
       <div className="flex flex-col items-center justify-center py-10 sm:py-16 md:py-20 px-4 sm:px-8 md:px-16 lg:px-24">
         <FlippedWords text={heading} />
         <div className="max-w-3xl mx-auto">
           <AnimateSentences
             content={content}
-            className="my-6 sm:my-10 text-sm sm:text-base md:text-lg text-center leading-relaxed"
+            className={`my-6 ${primary}  sm:my-10 text-sm sm:text-base md:text-lg text-center leading-relaxed`}
           />
         </div>
       </div>
@@ -68,4 +84,3 @@ export const Home = () => {
 }
 
 export default Home
-
