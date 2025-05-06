@@ -6,10 +6,6 @@ import { toast } from "sonner";
 import { useNavigate, Link } from "react-router-dom";
 import { localStorageService } from "@/services/localStorage.service";
 import { UseMutationResult } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { z, ZodIssue } from "zod";
 
 // Define Zod schema for SignInRequest
@@ -91,53 +87,55 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 px-4">
-      <Card className="w-full max-w-md shadow-xl border-2 border-slate-300">
-        <CardHeader>
-          <CardTitle className="text-center text-2xl font-semibold text-slate-800">
-            Welcome Back 👋
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="you@example.com"
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <Button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-              disabled={mutation.isPending}
-            >
-              {mutation.isPending ? "Signing In..." : "Sign In"}
-            </Button>
-          </form>
-          <div className="text-sm text-center text-gray-600 mt-6">
-            Don’t have an account?{" "}
-            <Link to="/signup" className="text-blue-600 hover:underline font-medium">
-              Sign Up
-            </Link>
+    <div className="min-h-screen flex items-center justify-center bg-[#f9f5ef] px-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+        <h2 className="text-3xl font-bold text-center text-[#c19a5b] mb-8">
+          Welcome Back 👋
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <label htmlFor="email" className="block text-sm font-medium text-[#1f1f1f]">
+              Email Address
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c19a5b] text-[#1f1f1f] placeholder-gray-400"
+            />
           </div>
-        </CardContent>
-      </Card>
+          <div className="space-y-2">
+            <label htmlFor="password" className="block text-sm font-medium text-[#1f1f1f]">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c19a5b] text-[#1f1f1f] placeholder-gray-400"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-[#c19a5b] text-white font-semibold py-2 rounded-lg hover:bg-[#a6844a] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending ? "Signing In..." : "Sign In"}
+          </button>
+        </form>
+        <div className="text-sm text-center text-[#1f1f1f] mt-6">
+          Don’t have an account?{" "}
+          <Link to="/signup" className="text-[#c19a5b] hover:underline font-medium">
+            Sign Up
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

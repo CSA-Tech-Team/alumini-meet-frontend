@@ -406,8 +406,8 @@ const Dashboard = () => {
     return (
         <div className="mx-auto max-w-7xl px-4 py-8">
             <div className="mb-8 text-center">
-                <h1 className="mb-2 text-3xl font-bold text-gray-900">Event Dashboard</h1>
-                <p className="text-gray-600">Manage your events and songs in one place</p>
+                <h1 className="mb-2 text-3xl font-bold text-gray-900 font-cormorant uppercase">Event Dashboard</h1>
+                {/* <p className="text-gray-600">Manage your events and songs in one place</p> */}
             </div>
 
             <div className="mb-8 flex justify-center">

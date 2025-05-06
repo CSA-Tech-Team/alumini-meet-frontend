@@ -16,7 +16,6 @@ const event_name_part2: string = "MEET"
 
 const heading: string = "Where Memories Echo, Friendships Reignite"
 const content: string = `Step back into the hallways of laughter, shared dreams, and timeless bonds.
-Nostaldiv is more than a reunion — it's a celebration of every late-night chai, impromptu dance, and heartfelt goodbye that shaped us.
 Join us as we relive the stories that never aged and create new ones to carry forward.`
 
 export const Home = () => {
@@ -37,17 +36,17 @@ export const Home = () => {
           <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl">{department_name}</h2>
         </div>
 
-        <div className="flex max-lg:mt-14 flex-col items-center justify-center">
+        <div className="flex  flex-col items-center justify-center">
           <h1
-            className={`font-cormorant tracking-widest mb-16 max-lg:mb-5 font-bold ${primary} z-10 text-center text-[3.5rem] sm:text-[5rem] md:text-[8rem] lg:text-[12rem] leading-[0.85] tracking-widest`}
+            // className={`font-cormorant tracking-widest  max-lg:mb-5 font-bold ${primary} z-10 text-center  lg:text-[12rem] leading-[0.85] tracking-widest`}
           >
-            {event_name_part1}
+            <FlippedWords text={event_name_part1} className={`tracking-widest  max-lg:mb-5 font-bold ${primary} z-10 text-center max-lg:text-6xl lg:text-[12rem] leading-[0.85] tracking-widest`} />
           </h1>
           <h1
-            className={`font-cormorant font-bold ${primary} z-10 text-center text-[3.5rem] sm:text-[5rem] md:text-[8rem] lg:text-[12rem] leading-[0.85] tracking-wider`}
+            // className={` ${primary} z-10 text-center  lg:text-[12rem] leading-[0.85] tracking-wider`}
           >
-            {event_name_part2}
-          </h1>
+            <FlippedWords text={event_name_part2} className={`tracking-widest  max-lg:mb-5 font-bold ${primary} z-10 text-center max-lg:text-6xl lg:text-[12rem] leading-[0.85] tracking-widest`} />
+            </h1>
         </div>
       </section>
 
@@ -57,7 +56,7 @@ export const Home = () => {
 
       {/* Faculty Photo Section */}
       <section className="flex flex-col items-center justify-center py-10 sm:py-16">
-        <h3 className={`font-bold ${primary} text-xl sm:text-2xl md:text-3xl mb-6 text-center`}>
+        <h3 className={`font-bold ${primary} font-cormorant uppercase text-xl sm:text-2xl md:text-3xl mb-6 text-center`}>
           Our Esteemed Faculty
         </h3>
         <div className="w-full max-w-4xl">
