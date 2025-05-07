@@ -3,10 +3,11 @@ import Logo from "@/components/home/Logo.tsx"
 import ParallaxComponent from "@/components/home/ParallelaxComponent"
 import FlippedWords from "@/components/home/FlippedWords.tsx"
 import AnimateSentences from "@/components/home/AnimateSentences.tsx"
-import { User } from "lucide-react"
+import { User } from 'lucide-react'
 import PhotoGallery from "@/components/home/Gallery"
 import Timer from "@/components/home/Timer"
 import facultiesPic from "@/assets/faculties.png"
+import Director from "@/components/home/Director"
 
 const college_name: string = "PSG COLLEGE OF TECHNOLOGY"
 const department_name: string = "DEPARTMENT OF APPLIED MATHEMATICS AND COMPUTATIONAL SCIENCES"
@@ -37,16 +38,12 @@ export const Home = () => {
         </div>
 
         <div className="flex  flex-col items-center justify-center">
-          <h1
-            // className={`font-cormorant tracking-widest  max-lg:mb-5 font-bold ${primary} z-10 text-center  lg:text-[12rem] leading-[0.85] tracking-widest`}
-          >
+          <h1>
             <FlippedWords text={event_name_part1} className={`tracking-widest  max-lg:mb-5 font-bold ${primary} z-10 text-center max-lg:text-6xl lg:text-[12rem] leading-[0.85] tracking-widest`} />
           </h1>
-          <h1
-            // className={` ${primary} z-10 text-center  lg:text-[12rem] leading-[0.85] tracking-wider`}
-          >
+          <h1>
             <FlippedWords text={event_name_part2} className={`tracking-widest  max-lg:mb-5 font-bold ${primary} z-10 text-center max-lg:text-6xl lg:text-[12rem] leading-[0.85] tracking-widest`} />
-            </h1>
+          </h1>
         </div>
       </section>
 
@@ -61,12 +58,15 @@ export const Home = () => {
         </h3>
         <div className="w-full max-w-4xl">
           <img
-            src={facultiesPic}
+            src={facultiesPic || "/placeholder.svg"}
             alt="Faculty of PSG College of Technology"
             className="w-full h-auto object-cover rounded-lg shadow-lg"
           />
         </div>
       </section>
+
+      {/* Our Beloved Director Section */}
+      <Director />
 
       <PhotoGallery />
       <div className="flex flex-col items-center justify-center py-10 sm:py-16 md:py-20 px-4 sm:px-8 md:px-16 lg:px-24">
