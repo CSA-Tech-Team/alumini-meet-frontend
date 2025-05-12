@@ -66,7 +66,7 @@ export const Home = () => {
       </section>
 
       {/* Our Beloved Director Section */}
-      <Director />
+      {/* <Director /> */}
 
       <PhotoGallery />
       <div className="flex flex-col items-center justify-center py-10 sm:py-16 md:py-20 px-4 sm:px-8 md:px-16 lg:px-24">
