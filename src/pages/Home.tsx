@@ -7,7 +7,6 @@ import { User } from 'lucide-react'
 import PhotoGallery from "@/components/home/Gallery"
 import Timer from "@/components/home/Timer"
 import facultiesPic from "@/assets/faculties.png"
-import Director from "@/components/home/Director"
 
 const college_name: string = "PSG COLLEGE OF TECHNOLOGY"
 const department_name: string = "DEPARTMENT OF APPLIED MATHEMATICS AND COMPUTATIONAL SCIENCES"
