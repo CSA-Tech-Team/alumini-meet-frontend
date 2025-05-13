@@ -16,7 +16,7 @@ const FlippedWords = ({
 
     return (
         <div
-            className={`w-full flex flex-col ${indent ? 'items-start' : 'items-center'}`}
+            className={`w-full text-[#c19a5b] font-bold flex flex-col ${indent ? 'items-start' : 'items-center'}`}
         >
             {lines.map((line, lineIdx) => (
                 <div

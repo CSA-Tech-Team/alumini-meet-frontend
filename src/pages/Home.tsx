@@ -3,11 +3,11 @@ import Logo from "@/components/home/Logo.tsx"
 import ParallaxComponent from "@/components/home/ParallelaxComponent"
 import FlippedWords from "@/components/home/FlippedWords.tsx"
 import AnimateSentences from "@/components/home/AnimateSentences.tsx"
-import { User } from 'lucide-react'
+import { FileText, User } from 'lucide-react'
 import PhotoGallery from "@/components/home/Gallery"
 import Timer from "@/components/home/Timer"
 import facultiesPic from "@/assets/faculties.png"
-
+import agendaPdf from "@/assets/Alumni_Meet_Agenda_2025.pdf"
 const college_name: string = "PSG COLLEGE OF TECHNOLOGY"
 const department_name: string = "DEPARTMENT OF APPLIED MATHEMATICS AND COMPUTATIONAL SCIENCES"
 
@@ -25,9 +25,14 @@ export const Home = () => {
     >
       <div className="flex justify-between items-center w-full">
         <Logo />
-        <a href="/signup" className="p-2 hover:bg-black/10 rounded-full transition-colors">
-          <User className="cursor-pointer w-6 h-6 sm:w-7 sm:h-7" />
-        </a>
+        <div className="flex gap-2">
+          <a href="/signup" title="Login to the Event Registration" className="p-2 hover:bg-black/10 rounded-full transition-colors">
+            <User className="cursor-pointer w-6 h-6 sm:w-7 sm:h-7" />
+          </a>
+          <a href={agendaPdf} target="_blank" rel="noopener noreferrer" title="View Agenda PDF" className="p-2 hover:bg-black/10 rounded-full transition-colors">
+            <FileText className="cursor-pointer w-6 h-6 sm:w-7 sm:h-7" />
+          </a>
+        </div>
       </div>
 
       <section className="flex flex-col items-center justify-center text-center min-h-[40vh] sm:min-h-[50vh] mt-4 sm:mt-8">
@@ -47,6 +52,9 @@ export const Home = () => {
       </section>
 
       <ParallaxComponent />
+      <h1
+        className={`font-bold ${primary} font-cormorant uppercase text-xl sm:text-2xl md:text-3xl mb-6 text-center`}
+      >To commemorate 50th anniversary of MSc Applied Mathematics program and 10th anniversary of MSc Data Science program</h1>
 
       <Timer />
 

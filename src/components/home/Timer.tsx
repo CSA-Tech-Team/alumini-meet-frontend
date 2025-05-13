@@ -1,9 +1,10 @@
 import { CountdownTimer } from "@/components/countdown-timer"
 import FlippedWords from "./FlippedWords"
+import { primary } from "@/constants/styles"
 
 export default function Timer() {
   return (
-    <main className="flex flex-col items-center justify-center  p-4">
+    <main className={`flex ${primary} font-cormorant flex-col items-center justify-center  p-4`}>
       <div className="max-w-4xl w-full mx-auto text-center">
         <FlippedWords text="RECONNECT" />
         <FlippedWords text="REWIND" />
