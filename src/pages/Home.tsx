@@ -7,7 +7,6 @@ import { FileText, User } from 'lucide-react'
 import PhotoGallery from "@/components/home/Gallery"
 import Timer from "@/components/home/Timer"
 import facultiesPic from "@/assets/faculties.png"
-import agendaPdf from "@/assets/Alumni_Meet_Agenda_2025.pdf"
 const college_name: string = "PSG COLLEGE OF TECHNOLOGY"
 const department_name: string = "DEPARTMENT OF APPLIED MATHEMATICS AND COMPUTATIONAL SCIENCES"
 
@@ -29,9 +28,16 @@ export const Home = () => {
           <a href="/signup" title="Login to the Event Registration" className="p-2 hover:bg-black/10 rounded-full transition-colors">
             <User className="cursor-pointer w-6 h-6 sm:w-7 sm:h-7" />
           </a>
-          <a href={agendaPdf} target="_blank" rel="noopener noreferrer" title="View Agenda PDF" className="p-2 hover:bg-black/10 rounded-full transition-colors">
-            <FileText className="cursor-pointer w-6 h-6 sm:w-7 sm:h-7" />
+          <a
+            href="/Alumni_Meet_Agenda_2025.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="View Agenda PDF"
+            className="p-2 hover:bg-black/10 rounded-full transition-colors"
+          >
+          <FileText className="cursor-pointer w-6 h-6 sm:w-7 sm:h-7" />
           </a>
+
         </div>
       </div>
 
@@ -52,10 +58,10 @@ export const Home = () => {
       </section>
 
       <ParallaxComponent />
-      <h1
-        className={`font-bold ${primary} font-cormorant uppercase text-xl sm:text-2xl md:text-3xl mb-6 text-center`}
-      >To commemorate 50th anniversary of MSc Applied Mathematics program and 10th anniversary of MSc Data Science program</h1>
-
+     <h1 className={`font-bold ${primary} font-cormorant uppercase text-xl sm:text-2xl md:text-3xl mb-6 text-center`}>
+      To commemorate <span className="inline">{50}</span><sup className="text-base">th</sup> anniversary of MSc Applied Mathematics program and <span className="inline">{10}</span><sup className="text-base">th</sup> anniversary of MSc Data Science program
+     </h1>
+     
       <Timer />
 
       {/* Faculty Photo Section */}
