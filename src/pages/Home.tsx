@@ -59,7 +59,7 @@ export const Home = () => {
 
       <ParallaxComponent />
      <h1 className={`font-bold ${primary} font-cormorant uppercase text-xl sm:text-2xl md:text-3xl mb-6 text-center`}>
-      To commemorate <span className="inline">{50}</span><sup className="text-base">th</sup> anniversary of MSc Applied Mathematics program and <span className="inline">{10}</span><sup className="text-base">th</sup> anniversary of MSc Data Science program
+       To commemorate <span className="inline">{50}</span><sup className="text-base lowercase">th</sup> anniversary of MSc Applied Mathematics program and <span className="inline">{10}</span><sup className="text-base lowercase">th</sup> anniversary of MSc Data Science program
      </h1>
      
       <Timer />
