@@ -35,7 +35,7 @@ export const Home = () => {
             title="View Agenda PDF"
             className="p-2 hover:bg-black/10 rounded-full transition-colors"
           >
-          <FileText className="cursor-pointer w-6 h-6 sm:w-7 sm:h-7" />
+            <FileText className="cursor-pointer w-6 h-6 sm:w-7 sm:h-7" />
           </a>
 
         </div>
@@ -58,10 +58,13 @@ export const Home = () => {
       </section>
 
       <ParallaxComponent />
-     <h1 className={`font-bold ${primary} font-cormorant uppercase text-xl sm:text-2xl md:text-3xl mb-6 text-center`}>
-       To commemorate <span className="inline">{50}</span><sup className="text-base lowercase">th</sup> a<span className="inline lowercase">nniversary</span> of MSc Applied Mathematics program and <span className="inline">{10}</span><sup className="text-base lowercase">th</sup> a<span className="inline lowercase">nniversary</span> of MSc Data Science program
-     </h1>
-     
+
+      <h1 className={`font-bold ${primary} font-cormorant  text-xl sm:text-2xl md:text-3xl mb-6 text-center`}>
+        Join us for a spectacular Alumni Meet a heartfelt gathering of our esteemed alumni 
+        commemorating the <span className="inline">50<sup className="text-base">th</sup></span> anniversary
+        of the MSc Applied Mathematics program and the <span className="inline">10<sup className="text-base">th</sup></span>
+        anniversary of the MSc Data Science program. Reconnect, reminisce, and celebrate with joy and pride!
+      </h1>
       <Timer />
 
       {/* Faculty Photo Section */}
