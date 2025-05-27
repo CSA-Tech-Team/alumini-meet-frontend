@@ -29,7 +29,7 @@ export const Home = () => {
             <User className="cursor-pointer w-6 h-6 sm:w-7 sm:h-7" />
           </a>
           <a
-            href="/Alumni_Meet_Agenda_2025.pdf"
+            href="/ALUMNIMEETAGENA.pdf"
             target="_blank"
             rel="noopener noreferrer"
             title="View Agenda PDF"
