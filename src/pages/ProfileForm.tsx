@@ -58,7 +58,7 @@ const profileSchema = z.object({
         }),
     phonenumber: z
         .string({ required_error: "Phone number is required" })
-        .regex(/^\d{10}$/, "Phone number must be 10 digits"),
+        .regex(/^\+?[1-9]\d{7,14}$/, "Phone number must be 10 digits"),
 });
 
 const ProfileForm = () => {

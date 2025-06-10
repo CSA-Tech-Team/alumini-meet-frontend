@@ -477,7 +477,7 @@ const AdminDashboard = () => {
               data={eventsData}
               columns={[
                 { field: "eventName", headerName: "Event Name" },
-                { field: "participantCount", headerName: "Participant Count" },
+                { field: "about", headerName: "Description" },
                 { field: "participants", headerName: "Participants" },
               ]}
               caption="List of all events and their participants."
@@ -589,7 +589,7 @@ const AdminDashboard = () => {
           <CardContent className="flex flex-col lg:flex-row lg:space-x-8 space-y-6 lg:space-y-0">
             <div className="lg:w-1/2">
               <GenericTable
-                data={gradYearData}
+                data={[...gradYearData].sort((a, b) => Number(a.category) - Number(b.category))}
                 columns={[
                   { field: "category", headerName: "Graduation Year" },
                   { field: "count", headerName: "Count" },
