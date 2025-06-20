@@ -1,17 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFoodPreferenceCount, useGenderCount, useGradYearCount, useAllUsers } from "@/hooks/adminDashboard";
 import DonutChart from "@/components/charts/DonutChart";
 import GenericTable from "@/components/shared/GenericTable";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { BACKEND_URL } from "@/constants/styles"; // Updated import path
+import { BACKEND_URL } from "@/constants/styles";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { useEffect } from "react";
 
-// Define interfaces for API responses
+// Define interfaces for the API responses
 interface CourseCount {
   course: string;
   count: number;
@@ -57,7 +56,7 @@ interface Song {
   event: string;
   songDetails: string;
   topic: string | null;
-  needKaraoke: boolean; // Corrected typo
+  needKaroke: boolean;
   userId: string;
   user: {
     email: string;
@@ -65,6 +64,7 @@ interface Song {
   };
 }
 
+// Interface for songs table data
 interface SongTableData {
   songDetails: string;
   singer: string;
@@ -76,93 +76,60 @@ interface SongTableData {
   addedOn: string;
 }
 
+
 // Fetch course count data
 const fetchCourseCount = async (): Promise<CourseCount[]> => {
   const token = localStorage.getItem("access_token");
   if (!token) throw new Error("No access token found");
-  try {
-    const response = await axios.get(`${BACKEND_URL}/events/user/course`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || "Failed to fetch course count");
-    }
-    throw error;
-  }
+  const response = await axios.get(`${BACKEND_URL}/events/user/course`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
 };
 
 // Fetch events data
 const fetchEvents = async (): Promise<Event[]> => {
   const token = localStorage.getItem("access_token");
   if (!token) throw new Error("No access token found");
-  try {
-    const response = await axios.get(`${BACKEND_URL}/events`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || "Failed to fetch events");
-    }
-    throw error;
-  }
+  const response = await axios.get(`${BACKEND_URL}/events`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
 };
 
 // Fetch songs data
 const fetchSongs = async (): Promise<Song[]> => {
   const token = localStorage.getItem("access_token");
   if (!token) throw new Error("No access token found");
-  try {
-    const response = await axios.get(`${BACKEND_URL}/events/songs`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || "Failed to fetch songs");
-    }
-    throw error;
-  }
+  const response = await axios.get(`${BACKEND_URL}/events/songs`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
 };
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("access_token");
 
-  // Check for token and redirect if missing
-  useEffect(() => {
-    if (!token) {
-      toast.error("Please sign in to access the dashboard.");
-      navigate("/signin");
-    }
-  }, [navigate, token]);
-
-  if (!token) return null;
-
-  // Queries
+  // Existing queries
   const foodPreferenceQuery = useFoodPreferenceCount();
   const genderQuery = useGenderCount();
   const gradYearQuery = useGradYearCount();
   const allUsersQuery = useAllUsers();
 
+  // Queries for course count, events, and songs
   const courseCountQuery = useQuery({
     queryKey: ["courseCount"],
     queryFn: fetchCourseCount,
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 
   const eventsQuery = useQuery({
     queryKey: ["events"],
     queryFn: fetchEvents,
-    staleTime: 5 * 60 * 1000,
   });
 
   const songsQuery = useQuery({
     queryKey: ["songs"],
     queryFn: fetchSongs,
-    staleTime: 5 * 60 * 1000,
   });
 
   // Consolidated loading and error states
@@ -196,6 +163,15 @@ const AdminDashboard = () => {
   }
 
   if (isError) {
+    console.error("Error loading data:", {
+      foodPreferenceError: foodPreferenceQuery.error,
+      genderError: genderQuery.error,
+      gradYearError: gradYearQuery.error,
+      allUsersError: allUsersQuery.error,
+      courseCountError: courseCountQuery.error,
+      eventsError: eventsQuery.error,
+      songsError: songsQuery.error,
+    });
     toast.error("Unauthorized or failed to load data. Please sign in again.");
     navigate("/signin");
     return null;
@@ -203,139 +179,134 @@ const AdminDashboard = () => {
 
   // Prepare Data for Tables and Charts
   const foodData = [
-    { category: "Vegetarian", count: foodPreferenceQuery.data?.vegFoodCount ?? 0, fill: "#4a90e2" },
-    { category: "Non-Vegetarian", count: foodPreferenceQuery.data?.nonvegFoodCount ?? 0, fill: "#50c878" },
+    { category: "Vegetarian", count: foodPreferenceQuery.data?.vegFoodCount ?? 0, fill: "var(--color-chrome)" },
+    { category: "Non-Vegetarian", count: foodPreferenceQuery.data?.nonvegFoodCount ?? 0, fill: "var(--color-safari)" },
   ];
 
   const genderData = [
-    { category: "Male", count: genderQuery.data?.maleCount ?? 0, fill: "#4a90e2" },
-    { category: "Female", count: genderQuery.data?.femaleCount ?? 0, fill: "#50c878" },
-    { category: "Prefer Not to Say", count: genderQuery.data?.prefNotCount ?? 0, fill: "#ff6b6b" },
+    { category: "Male", count: genderQuery.data?.maleCount ?? 0, fill: "var(--color-chrome)" },
+    { category: "Female", count: genderQuery.data?.femaleCount ?? 0, fill: "var(--color-safari)" },
+    { category: "Prefer Not to Say", count: genderQuery.data?.prefNotCount ?? 0, fill: "var(--color-firefox)" },
   ];
 
   const gradYearData =
     gradYearQuery.data?.gradYearCount.map((item) => ({
       category: String(item.graduationYear ?? "Not Specified"),
       count: item._count.graduationYear,
-      fill: "#9b59b6",
+      fill: "var(--color-edge)",
     })) ?? [];
 
   const courseData =
     courseCountQuery.data?.map((item) => ({
       category: item.course,
       count: item.count,
-      fill: "#e74c3c",
+      fill: "var(--color-opera)",
     })) ?? [];
 
   const allUsersData =
     allUsersQuery.data?.map((user) => ({
-      id: user.email, // Assuming email is unique; replace with userId if available
-      name: user.profile.name ?? "N/A",
-      email: user.email ?? "N/A",
-      role: user.role ?? "N/A",
-      graduationYear: user.profile.graduationYear ?? "N/A",
-      gender: user.profile.gender ?? "N/A",
-      rollNumber: user.profile.rollNumber ?? "N/A",
-      phoneNumber: user.profile.phoneNumber ?? "N/A",
-      designation: user.profile.designation ?? "N/A",
-      address: user.profile.address ?? "N/A",
-      course: user.profile.course ?? "N/A",
-      foodPreference: user.foodPreference ?? "N/A",
+      name: user.profile.name,
+      email: user.email,
+      role: user.role,
+      graduationYear: user.profile.graduationYear,
+      gender: user.profile.gender,
+      rollNumber: user.profile.rollNumber,
+      phoneNumber: user.profile.phoneNumber,
+      designation: user.profile.designation,
+      address: user.profile.address,
+      course: user.profile.course,
+      foodPreference: user.foodPreference,
     })) ?? [];
 
   const eventsData =
     eventsQuery.data?.map((event) => ({
-      id: event.id,
-      eventName: event.eventName ?? "N/A",
-      about: event.about ?? "N/A",
-      createdAt: event.createdAt ? new Date(event.createdAt).toLocaleDateString() : "N/A",
-      participants: event.userActivities?.map((activity) => activity.user.profile.name ?? "Unknown").join(", ") || "None",
+      eventName: event.eventName,
+      about: event.about,
+      participants: event.userActivities.map((activity) => activity.user.profile.name).join(", ") || "None",
+      participantCount: event.userActivities.length||0,
     })) ?? [];
 
   const songsData: SongTableData[] =
     songsQuery.data?.map((song) => ({
-      id: song.id,
-      songDetails: song.songDetails ?? "N/A",
-      singer: song.user?.profile?.name ?? "Unknown",
-      email: song.user?.email ?? "N/A",
-      rollNumber: song.user?.profile?.rollNumber ?? "N/A",
-      phoneNumber: song.user?.profile?.phoneNumber ?? "N/A",
-      topic: song.topic ?? "No topic",
-      needsKaraoke: song.needKaraoke ? "Yes" : "No",
-      addedOn: song.createdAt ? format(new Date(song.createdAt), "PPP") : "N/A",
+      songDetails: song.songDetails,
+      singer: song.user.profile.name,
+      email: song.user.email,
+      rollNumber: song.user.profile.rollNumber,
+      phoneNumber: song.user.profile.phoneNumber,
+      topic: song.topic || "No topic",
+      needsKaraoke: song.needKaroke ? "Yes" : "No",
+      addedOn: format(new Date(song.createdAt), "PPP"),
     })) ?? [];
 
   // Calculate karaoke statistics for chart
-  const karaokeCount = songsQuery.data?.filter((song) => song.needKaraoke).length ?? 0;
+  const karaokeCount = songsQuery.data?.filter((song) => song.needKaroke).length ?? 0;
   const nonKaraokeCount = (songsQuery.data?.length ?? 0) - karaokeCount;
 
   const karaokeData = [
-    { category: "Needs Karaoke", count: karaokeCount, fill: "#4a90e2" },
-    { category: "No Karaoke", count: nonKaraokeCount, fill: "#50c878" },
+    { category: "Needs Karaoke", count: karaokeCount, fill: "var(--color-chrome)" },
+    { category: "No Karaoke", count: nonKaraokeCount, fill: "var(--color-safari)" },
   ];
 
   const chartConfig = {
     label: { label: "Count" },
-    chrome: { label: "Chrome", color: "#4a90e2" },
-    safari: { label: "Safari", color: "#50c878" },
-    firefox: { label: "Firefox", color: "#ff6b6b" },
-    edge: { label: "Edge", color: "#9b59b6" },
-    opera: { label: "Opera", color: "#e74c3c" },
+    chrome: { label: "Chrome", color: "hsl(var(--chart-1))" },
+    safari: { label: "Safari", color: "hsl(var(--chart-2))" },
+    firefox: { label: "Firefox", color: "hsl(var(--chart-3))" },
+    edge: { label: "Edge", color: "hsl(var(--chart-4))" },
+    opera: { label: "Opera", color: "hsl(var(--chart-5))" },
   };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Admin Dashboard</h1>
       <div className="max-w-7xl mx-auto">
-        {/* Alumni Registrations */}
-        <div className="mt-6">
-          <div className="flex items-center bg-purple-600 text-white px-4 py-2 rounded-t-md">
-            <img
-              src="https://static.vecteezy.com/system/resources/thumbnails/012/574/694/small/people-linear-icon-squad-illustration-team-pictogram-group-logo-icon-illustration-vector.jpg"
-              alt="Alumni Icon"
-              className="w-6 h-6 mr-2"
-            />
-            <h2 className="text-lg font-semibold">Alumni Registrations</h2>
-          </div>
-          <div
-            className={`w-full rounded-lg border border-gray-200 shadow-sm ${
-              allUsersData.length > 25 ? "max-h-[500px] overflow-y-auto" : ""
-            }`}
-          >
-            <table className="min-w-full divide-y divide-gray-200 text-sm">
-              <thead className="bg-gray-50 sticky top-0 z-10">
-                <tr>
-                  <th scope="col" className="px-4 py-2 text-left">Name</th>
-                  <th scope="col" className="px-4 py-2 text-left">Email</th>
-                  <th scope="col" className="px-4 py-2 text-left">Course</th>
-                  <th scope="col" className="px-4 py-2 text-left">Phone</th>
-                  <th scope="col" className="px-4 py-2 text-left">Graduation Year</th>
-                  <th scope="col" className="px-4 py-2 text-left">Roll No</th>
-                  <th scope="col" className="px-4 py-2 text-left">Gender</th>
-                  <th scope="col" className="px-4 py-2 text-left">Address</th>
-                  <th scope="col" className="px-4 py-2 text-left">Designation</th>
-                  <th scope="col" className="px-4 py-2 text-left">Food Preference</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-100">
-                {allUsersData.map((user) => (
-                  <tr key={user.id}>
-                    <td className="px-4 py-2">{user.name}</td>
-                    <td className="px-4 py-2">{user.email}</td>
-                    <td className="px-4 py-2">{user.course}</td>
-                    <td className="px-4 py-2">{user.phoneNumber}</td>
-                    <td className="px-4 py-2">{user.graduationYear}</td>
-                    <td className="px-4 py-2">{user.rollNumber}</td>
-                    <td className="px-4 py-2">{user.gender}</td>
-                    <td className="px-4 py-2">{user.address}</td>
-                    <td className="px-4 py-2">{user.designation}</td>
-                    <td className="px-4 py-2">{user.foodPreference}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+     {/* Alumini Registration*/}   
+      <div className="mt-6">
+        <div className="flex items-center bg-purple-600 text-white px-4 py-2 rounded-t-md">
+          <img src="https://static.vecteezy.com/system/resources/thumbnails/012/574/694/small/people-linear-icon-squad-illustration-team-pictogram-group-logo-icon-illustration-vector.jpg" alt="Logo" className="w-6 h-6 mr-2" />
+          <h2 className="text-lg font-semibold">Alumni Registrations</h2>
         </div>
+   <div
+    className={`w-full rounded-lg border border-gray-200 shadow-sm ${
+      allUsersData.length > 25 ? "max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-[#c19a5b] scrollbar-track-gray-100" : ""
+    }`}
+  >
+    <table className="min-w-full divide-y divide-gray-200 text-sm">
+      <thead className="bg-gray-50 sticky top-0 z-10">
+        <tr>
+          <th className="px-4 py-2 text-left">Name</th>
+          <th className="px-4 py-2 text-left">Email</th>
+          <th className="px-4 py-2 text-left">Course</th>
+          <th className="px-4 py-2 text-left">Phone</th>
+          <th className="px-4 py-2 text-left">Graduation Year</th>
+          <th className="px-4 py-2 text-left">Roll No</th>
+          <th className="px-4 py-2 text-left">Gender</th>
+          <th className="px-4 py-2 text-left">Address</th>
+          <th className="px-4 py-2 text-left">Designation</th>
+          <th className="px-4 py-2 text-left">Food Preference</th>
+          {/* add more headers as needed */}
+        </tr>
+      </thead>
+      <tbody className="bg-white divide-y divide-gray-100">
+        {allUsersData.map((user, index) => (
+          <tr key={index}>
+            <td className="px-4 py-2">{user.name}</td>
+            <td className="px-4 py-2">{user.email}</td>
+            <td className="px-4 py-2">{user.course}</td>
+            <td className="px-4 py-2">{user.phoneNumber}</td>
+            <td className="px-4 py-2">{user.graduationYear}</td>
+            <td className="px-4 py-2">{user.rollNumber}</td>
+            <td className="px-4 py-2">{user.gender}</td>
+            <td className="px-4 py-2">{user.address}</td>
+            <td className="px-4 py-2">{user.designation}</td>
+            <td className="px-4 py-2">{user.foodPreference}</td>
+            {/* add other fields if needed */}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
 
         {/* Songs Section */}
         <Card className="mb-8 shadow-lg border-gray-200 overflow-hidden">
@@ -347,13 +318,12 @@ const AdminDashboard = () => {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 omena10l12-3"
+                  d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
                 />
               </svg>
               Songs Registry
@@ -377,8 +347,7 @@ const AdminDashboard = () => {
                           headerName: "Karaoke",
                           cellRenderer: (value: string) => (
                             <Badge
-                              className={value === "Yes" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}
-                            >
+                              className={value === "Yes" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}>
                               {value}
                             </Badge>
                           ),
@@ -416,7 +385,7 @@ const AdminDashboard = () => {
             </div>
 
             <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-              <h3 className="text-lg font-medium text-gray-800 mb-4portion4 mb-4">Detailed Song Information</h3>
+              <h3 className="text-lg font-medium text-gray-800 mb-4">Detailed Song Information</h3>
               <div className="overflow-x-auto">
                 <GenericTable
                   data={songsData}
@@ -447,7 +416,6 @@ const AdminDashboard = () => {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                aria-hidden="true"
               >
                 <path d="M12 14l9-5-9-5-9 5 9 5z" />
                 <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
@@ -493,7 +461,6 @@ const AdminDashboard = () => {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -511,7 +478,6 @@ const AdminDashboard = () => {
               columns={[
                 { field: "eventName", headerName: "Event Name" },
                 { field: "about", headerName: "Description" },
-                { field: "createdAt", headerName: "Created At" },
                 { field: "participants", headerName: "Participants" },
               ]}
               caption="List of all events and their participants."
@@ -530,7 +496,6 @@ const AdminDashboard = () => {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"
@@ -569,7 +534,6 @@ const AdminDashboard = () => {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"
@@ -609,7 +573,6 @@ const AdminDashboard = () => {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                aria-hidden="true"
               >
                 <path d="M12 14l9-5-9-5-9 5 9 5z" />
                 <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
@@ -626,7 +589,7 @@ const AdminDashboard = () => {
           <CardContent className="flex flex-col lg:flex-row lg:space-x-8 space-y-6 lg:space-y-0">
             <div className="lg:w-1/2">
               <GenericTable
-                data={gradYearData}
+                data={[...gradYearData].sort((a, b) => Number(a.category) - Number(b.category))}
                 columns={[
                   { field: "category", headerName: "Graduation Year" },
                   { field: "count", headerName: "Count" },

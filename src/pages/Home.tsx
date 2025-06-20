@@ -29,7 +29,7 @@ export const Home = () => {
             <User className="cursor-pointer w-6 h-6 sm:w-7 sm:h-7" />
           </a>
           <a
-            href="/Alumni_Meet_Agenda_2025.pdf"
+            href="/ALUMNIMEETAGENA.pdf"
             target="_blank"
             rel="noopener noreferrer"
             title="View Agenda PDF"
@@ -93,7 +93,45 @@ export const Home = () => {
             className={`my-6 ${primary}  sm:my-10 text-sm sm:text-base md:text-lg text-center leading-relaxed`}
           />
         </div>
-      </div>
+      </div> 
+
+  {/* Footer Section */}
+  <footer className="bg-gray-900 text-white py-8 px-6 mt-10 rounded-xl">
+  <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
+    {/* Contact Info */}
+    <div>
+      <h4 className="text-lg font-semibold mb-2">Contact Us</h4>
+      <p className="text-sm">
+        <strong>For Details of the event: Prof. Mohanraj</strong><br />
+        Phone: <a href= "Phone Number: +91 9865854615" className=" +91 98658 54615">+91 9865854615</a>< br/>
+        Email: <a href="mailto: nmr.amcs@psgtech.ac.in" className="text-blue-400 hover:underline">nmr.amcs@psgtech.ac.in</a>
+      </p>
+      <p className="text-sm mt-2">
+        <strong>Issues related registration: Aklamaash</strong><br />
+        Phone: <a href= "Phone Number: +91 6369202355" className= "+91 6369202355">+91 6369202355</a>
+      </p>
+    </div>
+
+    {/* Embedded Map */}
+    <div className="w-full md:w-1/2">
+      <h4 className="text-lg font-semibold mb-2">Location</h4>
+      <iframe
+        title="PSG College of Technology Map"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3912.1495705435814!2d76.9992410750589!3d11.02677885519902!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba859a893d06aab%3A0xc42ff9c4d2131225!2sPSG%20College%20of%20Technology!5e0!3m2!1sen!2sin!4v1718200000000!5m2!1sen!2sin"
+        width="100%"
+        height="200"
+        allowFullScreen
+        loading="lazy"
+        className="rounded-lg shadow-md border border-gray-700"
+      />
+    </div>
+  </div>
+
+  <div className="text-center text-xs text-gray-400 mt-6">
+    &copy; {new Date().getFullYear()} PSG College of Technology. All rights reserved.
+  </div>
+</footer>
+
     </section>
   )
 }
