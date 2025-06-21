@@ -7,6 +7,8 @@ import { FileText, User } from 'lucide-react'
 import PhotoGallery from "@/components/home/Gallery"
 import Timer from "@/components/home/Timer"
 import facultiesPic from "@/assets/faculties.png"
+import { Phone, Mail } from "lucide-react"
+
 const college_name: string = "PSG COLLEGE OF TECHNOLOGY"
 const department_name: string = "DEPARTMENT OF APPLIED MATHEMATICS AND COMPUTATIONAL SCIENCES"
 
@@ -96,38 +98,49 @@ export const Home = () => {
       </div> 
 
   {/* Footer Section */}
-  <footer className="bg-gray-900 text-white py-8 px-6 mt-10 rounded-xl">
-  <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
+  <footer className="w-full text-black font-cormorant font-semibold text-3xl py-4 px-6 mt-6">
+  <div className="flex flex-col md:flex-row justify-between items-start gap-10">
     {/* Contact Info */}
-    <div>
-      <h4 className="text-lg font-semibold mb-2">Contact Us</h4>
-      <p className="text-sm">
-        <strong>For Details of the event: Prof. Mohanraj</strong><br />
-        Phone: <a href= "Phone Number: +91 9865854615" className=" +91 98658 54615">+91 9865854615</a>< br/>
-        Email: <a href="mailto: nmr.amcs@psgtech.ac.in" className="text-blue-400 hover:underline">nmr.amcs@psgtech.ac.in</a>
+    <div className="w-full md:w-1/2 lg:w-[45%]">
+      <h4 className="text-2xl font-extrabold tracking-wide mb-4">Contact Us</h4>
+
+      <p className="text-xl mb-6">
+        <strong>Event-related inquiries: Prof. Mohanraj</strong><br />
+        <span className="flex items-center gap-2 mt-1">
+          <Phone className="w-4 h-4" />
+          +91 9865854615
+        </span>
+        <span className="flex items-center gap-2 mt-1">
+          <Mail className="w-4 h-4" />
+          <a href="mailto: nmr.amcs@psgtech.ac.in" className="text-blue-400 hover:underline">
+            nmr.amcs@psgtech.ac.in</a>
+        </span>
       </p>
-      <p className="text-sm mt-2">
-        <strong>Issues related registration: Aklamaash</strong><br />
-        Phone: <a href= "Phone Number: +91 6369202355" className= "+91 6369202355">+91 6369202355</a>
+
+      <p className="text-xl">
+        <strong>Registration support contact: Aklamaash</strong><br />
+        <span className="flex items-center gap-2 mt-1">
+          <Phone className="w-4 h-4" />
+          +91 6369202355
+        </span>
       </p>
     </div>
 
     {/* Embedded Map */}
-    <div className="w-full md:w-1/2">
-      <h4 className="text-lg font-semibold mb-2">Location</h4>
+    <div className="w-full md:w-1/2 lg:w-[45%]">
+      <h4 className="text-2xl font-semibold mb-4">Location</h4>
       <iframe
         title="PSG College of Technology Map"
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3912.1495705435814!2d76.9992410750589!3d11.02677885519902!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba859a893d06aab%3A0xc42ff9c4d2131225!2sPSG%20College%20of%20Technology!5e0!3m2!1sen!2sin!4v1718200000000!5m2!1sen!2sin"
-        width="100%"
-        height="200"
-        allowFullScreen
+        src="https://maps.google.com/maps?q=PSG%20College%20of%20Technology&z=15&output=embed"
         loading="lazy"
-        className="rounded-lg shadow-md border border-gray-700"
+        allowFullScreen
+        className="w-full h-[300px] rounded-lg shadow-md border border-white"
       />
     </div>
   </div>
 
-  <div className="text-center text-xs text-gray-400 mt-6">
+  <hr className="border-t border-grey-400 my-6" />  
+  <div className="text-center text-xl text-grey font-medium">
     &copy; {new Date().getFullYear()} PSG College of Technology. All rights reserved.
   </div>
 </footer>
